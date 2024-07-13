@@ -12,7 +12,7 @@ import GoogleIcon from '../Assets/Icons/google.svg'
 import PhoneDay from '../Assets/Day/phone-day.svg'
 import PhoneNight from '../Assets/Night/phone-night.svg'
 
-import auth from "../../firebaseConfig";
+import auth from "../../config/firebaseConfig";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth/web-extension";
 import { signInWithRedirect } from "firebase/auth";
 
