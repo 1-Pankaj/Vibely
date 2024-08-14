@@ -10,7 +10,10 @@ const TextRegular = ({ value,
     marginHorizontal,
     marginVertical,
     bold,
-    inverted
+    inverted,
+    flexStart,
+    paddingHorizontal,
+    textAlign
 }) => {
 
     const [themeState, setThemeState] = useState(Appearance.getColorScheme())
@@ -24,12 +27,14 @@ const TextRegular = ({ value,
             fontSize: bold? 18 : 16,
             fontFamily: bold? 'Mulish-SemiBold' : 'Mulish-Regular',
             fontWeight: 'regular',
-            textAlign: 'center',
             color: inverted? 'white' : themeState === 'dark' ? 'white' : 'black',
             marginStart: marginStart,
             marginEnd: marginEnd, marginBottom: marginBottom,
             marginTop: marginTop, marginHorizontal: marginHorizontal,
             marginVertical: marginVertical,
+            alignSelf:flexStart? 'flex-start' : 'center',
+            paddingHorizontal:paddingHorizontal,
+            textAlign:textAlign? textAlign : 'center'
         }}>
             {value}
         </Text>

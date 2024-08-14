@@ -1,8 +1,9 @@
 import React from "react";
 import { Button } from "react-native-paper";
 import TextRegular from "./TextRegular";
+import { Dimensions } from "react-native";
 
-const ThemeButton = ({ text,
+const Custombutton = ({ text,
     onPress,
     disabled,
     marginStart,
@@ -12,12 +13,12 @@ const ThemeButton = ({ text,
     marginHorizontal,
     marginVertical }) => {
     return (
-        <Button onPress={() => { onPress() }} textColor="white"
+        <Button onPress={onPress} textColor="white"
             mode="contained" labelStyle={{
                 fontStyle: 'normal', fontWeight: 'regular', fontSize: 16,
-                width: '75%', paddingVertical: 10
+                width: Dimensions.get('window').width-110, paddingVertical: 10
             }} style={{
-                borderRadius: 30, marginStart: marginStart,
+                borderRadius: 10, marginStart: marginStart,
                 marginEnd: marginEnd, marginBottom: marginBottom,
                 marginTop: marginTop, marginHorizontal: marginHorizontal,
                 marginVertical: marginVertical
@@ -28,4 +29,4 @@ const ThemeButton = ({ text,
     )
 }
 
-export default ThemeButton
+export default Custombutton

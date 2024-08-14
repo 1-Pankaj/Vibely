@@ -10,7 +10,11 @@ const TextBold = ({ value,
     marginHorizontal,
     marginVertical,
     padding,
-    paddingHorizontal
+    paddingHorizontal,
+    fontSize,
+    fontWeight,
+    textAlign,
+    flexStart
 }) => {
 
 
@@ -22,16 +26,17 @@ const TextBold = ({ value,
 
     return (
         <Text style={{
-            fontSize: 24,
+            fontSize: fontSize? fontSize : 24,
             fontFamily: 'Mulish-Bold',
-            fontWeight: 'condensed',
-            textAlign: 'center',
+            fontWeight: fontWeight? fontWeight : 'condensed',
+            textAlign: textAlign? textAlign : 'center',
             paddingHorizontal: paddingHorizontal,
             color: themeState === 'dark' ? 'white' : 'black',
             marginStart: marginStart,
             marginEnd: marginEnd, marginBottom: marginBottom,
             marginTop: marginTop, marginHorizontal: marginHorizontal,
             marginVertical: marginVertical,padding:padding,
+            alignSelf:flexStart? 'flex-start' : 'center'
         }}>
             {value}
         </Text>

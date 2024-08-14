@@ -1,7 +1,8 @@
 const DarkColours = {
-    background:"#0F1828",
-    light:"#152033",
-    primary:"#375FFF"
+    background:"#000",
+    light:"#19AD61",
+    primary:"#19AD61",
+    secondary:'#161616'
 }
 
 export default DarkColours

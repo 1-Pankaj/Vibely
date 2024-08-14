@@ -1,7 +1,8 @@
 const LightColours = {
     background:"#FFFFFF",
-    light:"#F7F7FC",
-    primary:"#002DE3"
+    light:"#19AD61",
+    primary:"#19AD61",
+    secondary:'#F2F2F2'
 }
 
 export default LightColours

@@ -5,15 +5,15 @@ import { View, Text, Appearance } from 'react-native';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { MD3DarkTheme, MD3LightTheme, PaperProvider, useTheme } from 'react-native-paper';
 import Onboarding from './Components/Screens/Onboarding';
-import Registration from './Components/Screens/Registration';
 import merge from 'deepmerge'
-import { SafeAreaView } from 'react-native-safe-area-context';
 import DarkColours from './Components/Themes/DarkColours';
 import LightColours from './Components/Themes/LightColours';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
+import PrivacyPolicy from './Components/Screens/PrivacyAndTerms';
+import Login from './Components/Screens/Auth/Login';
 
 const Stack = createStackNavigator();
 
@@ -97,11 +97,17 @@ function App() {
       <NavigationContainer theme={themeState == 'light' ? mergedLightTheme : mergedDarkTheme}>
         <Stack.Navigator screenOptions={{ headerShown:false, }}>
           <Stack.Screen name="Onboarding" component={Onboarding} options={{animation:'slide_from_bottom', }}/>
-          <Stack.Screen name='Registration' component={Registration} options={{animationEnabled:true, animation:'slide_from_bottom',
+          <Stack.Screen name='PrivacyPolicy' component={PrivacyPolicy} options={{animationEnabled:true, animation:'slide_from_bottom',
             gestureEnabled:true,
             presentation:'modal',
             ...(TransitionPresets.ModalPresentationIOS)
            }}/>
+          <Stack.Screen name='Login' component={Login} options={{animationEnabled:true, animation:'slide_from_bottom',
+            gestureEnabled:true,
+            presentation:'modal',
+            ...(TransitionPresets.ModalPresentationIOS)
+           }}/>
+           
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
