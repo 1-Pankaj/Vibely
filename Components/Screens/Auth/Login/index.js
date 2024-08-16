@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dimensions, TouchableOpacity, View } from "react-native";
 import stylesheet from "../../../UIElements/StyleSheet";
 import { BackButton } from "../../../UIElements/Back";
@@ -8,8 +8,19 @@ import { CustomTextInput } from "../../../UIElements/TextInput";
 import Custombutton from "../../../UIElements/Button";
 import { Divider, Text } from "react-native-paper";
 import GoogleButton from "../../../UIElements/GoogleButton";
+import DarkColours from "../../../Themes/DarkColours";
+import { Loader } from "../../../UIElements/Loader";
 
 export default Login = (props) => {
+
+    const [loading, setLoading] = useState(false)
+
+    useEffect(()=>{
+        setTimeout(() => {
+            setLoading(false)
+        }, 1000);
+    },[loading])
+
     return (
         <View style={[stylesheet.container, {
             justifyContent: 'space-between'
@@ -19,7 +30,7 @@ export default Login = (props) => {
                 <TextBold value={`Welcome`} fontSize={35}
                     fontWeight={"bold"} textAlign="left" flexStart
                     marginStart={20} marginTop={20} />
-                <TextBold value={`Back!`} fontSize={40}
+                <TextBold value={`Back!`} fontSize={37}
                     fontWeight={"bold"} textAlign="left" flexStart
                     marginStart={20} />
                 <TextRegular value={'Please enter your Email ID which will be used to access Vibely'}
@@ -28,11 +39,15 @@ export default Login = (props) => {
                     marginEnd={Dimensions.get('window').width / 3.5} />
             </View>
             <View style={{ flex: 1, justifyContent: 'space-between', }}>
-                <CustomTextInput label={"Email or Phone"} marginTop={50} />
+                <CustomTextInput label={"Email or Phone"} marginTop={50}
+                    icon="account" />
 
                 <View style={{ alignItems: 'center', marginBottom: 50 }}>
-                    
-                    <Custombutton text="Continue" marginTop={20} />
+
+                    <Custombutton text="Continue" marginTop={20} 
+                    onPress={()=>{
+                        setLoading(true)
+                    }}/>
                     <View style={{
                         flexDirection: 'row', alignItems: 'center',
                         marginTop: 20, marginBottom: 20
@@ -48,19 +63,28 @@ export default Login = (props) => {
                         }} />
                     </View>
                     <GoogleButton marginBottom={50} />
-                    
 
-                    <Text style={{fontFamily:'Mulish-Regular', 
-                        paddingHorizontal:50, textAlign:'center',}}>
+
+                    <Text style={{
+                        fontFamily: 'Mulish-Regular',
+                        paddingHorizontal: 50, textAlign: 'center',
+                    }}>
                         By tapping "Continue," I confirm that I agree to
                     </Text>
                     <TouchableOpacity onPress={() => {
                         props.navigation.navigate("PrivacyPolicy")
                     }}>
-                        <TextRegular value="Terms & Privacy Policy." />
+                        <Text style={{
+                            fontFamily: 'Mulish-Regular',
+                            paddingHorizontal: 50, textAlign: 'center',
+                            color:DarkColours.primary
+                        }}>
+                            Terms & Privacy Policy
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </View>
+            <Loader visible={loading}/>
         </View>
     )
 }

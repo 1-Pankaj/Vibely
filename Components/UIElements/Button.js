@@ -1,7 +1,8 @@
 import React from "react";
-import { Button } from "react-native-paper";
 import TextRegular from "./TextRegular";
 import { Dimensions } from "react-native";
+import TouchableScale from "@jonny/touchable-scale";
+import DarkColours from "../Themes/DarkColours";
 
 const Custombutton = ({ text,
     onPress,
@@ -13,19 +14,16 @@ const Custombutton = ({ text,
     marginHorizontal,
     marginVertical }) => {
     return (
-        <Button onPress={onPress} textColor="white"
-            mode="contained" labelStyle={{
-                fontStyle: 'normal', fontWeight: 'regular', fontSize: 16,
-                width: Dimensions.get('window').width-110, paddingVertical: 10
-            }} style={{
-                borderRadius: 10, marginStart: marginStart,
-                marginEnd: marginEnd, marginBottom: marginBottom,
-                marginTop: marginTop, marginHorizontal: marginHorizontal,
-                marginVertical: marginVertical
-            }}
+        <TouchableScale onPress={onPress} style={{
+            borderRadius: 10, marginStart: marginStart,
+            marginEnd: marginEnd, marginBottom: marginBottom,
+            marginTop: marginTop, marginHorizontal: marginHorizontal,
+            marginVertical: marginVertical, backgroundColor: DarkColours.primary,
+            paddingVertical: 20, width: Dimensions.get('window').width - 65,
+        }}
             disabled={disabled}>
-            <TextRegular value={text} bold inverted/>
-        </Button>
+            <TextRegular value={text} bold inverted />
+        </TouchableScale>
     )
 }
 
