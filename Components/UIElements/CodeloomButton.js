@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import TextRegular from "./TextRegular";
-import { Appearance, Dimensions, } from "react-native";
+import { Appearance, Dimensions, View, } from "react-native";
 import DarkColours from "../Themes/DarkColours";
 import LightColours from "../Themes/LightColours";
 
+import CodeloomIcon from '../Assets/Icons/codeloom.svg'
 import GoogleIcon from '../Assets/Icons/google.svg'
 import TouchableScale from "@jonny/touchable-scale";
 
-const GoogleButton = ({ text,
+const CodeloomButton = ({ text,
     onPress,
     disabled,
     marginStart,
@@ -15,9 +16,7 @@ const GoogleButton = ({ text,
     marginTop,
     marginBottom,
     marginHorizontal,
-    marginVertical,
-    full
-}) => {
+    marginVertical }) => {
 
     const [themeState, setThemeState] = useState(Appearance.getColorScheme())
 
@@ -34,21 +33,17 @@ const GoogleButton = ({ text,
             borderRadius: 10, marginStart: marginStart,
             marginEnd: marginEnd, marginBottom: marginBottom,
             marginTop: marginTop, marginHorizontal: marginHorizontal,
-            marginVertical: marginVertical, width: full ? '100%' : '45%',
-            paddingVertical: 20, backgroundColor: full ? DarkColours.secondary :
-                themeState === 'dark' ?
-                    DarkColours.secondary : LightColours.secondary,
+            marginVertical: marginVertical, width: '45%',
+            paddingVertical: 17, backgroundColor: DarkColours.secondary,
             alignItems: 'center', flexDirection: 'row',
             justifyContent: 'center'
         }}
             disabled={disabled} activeOpacity={0.6}>
-            <GoogleIcon size={30} style={{
-                width: 30, height: 30
-            }} />
-            <TextRegular value={full ? 'Sign in with Google' : "Google"} bold
-                marginStart={25} inverted={full}/>
+            <CodeloomIcon />
+            <TextRegular value={"Codeloom"} bold
+                marginStart={15} inverted />
         </TouchableScale>
     )
 }
 
-export default GoogleButton
+export default CodeloomButton

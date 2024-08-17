@@ -13,9 +13,10 @@ export const CustomTextInput = ({
   marginEnd,
   marginStart,
   flexStart,
-  icon
+  icon,
+  dark
 }) => {
-  const [themeState, setThemeState] = useState(Appearance.getColorScheme());
+  const [themeState, setThemeState] = useState(dark? 'dark' : Appearance.getColorScheme());
 
   useEffect(() => {
     const listener = () => {
@@ -38,9 +39,10 @@ export const CustomTextInput = ({
         backgroundColor: themeState === 'light' ?
           LightColours.secondary : DarkColours.secondary,
         alignSelf: flexStart ? 'flex-start' : 'center',
-        height:65
+        height: 65
       }}
-      left={icon? <TextInput.Icon icon={icon}/> : null}
+      left={icon ? <TextInput.Icon icon={icon}
+        color={themeState === 'dark' ? 'white' : 'black'} /> : null}
       value={value}
       outlineColor="gray"
       activeOutlineColor={themeState === 'dark' ? 'white' : 'black'}

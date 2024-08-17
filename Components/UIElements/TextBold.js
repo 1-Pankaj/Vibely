@@ -14,7 +14,8 @@ const TextBold = ({ value,
     fontSize,
     fontWeight,
     textAlign,
-    flexStart
+    flexStart,
+    inverted
 }) => {
 
 
@@ -31,7 +32,7 @@ const TextBold = ({ value,
             fontWeight: fontWeight? fontWeight : 'condensed',
             textAlign: textAlign? textAlign : 'center',
             paddingHorizontal: paddingHorizontal,
-            color: themeState === 'dark' ? 'white' : 'black',
+            color: inverted? 'white' : themeState === 'dark' ? 'white' : 'black',
             marginStart: marginStart,
             marginEnd: marginEnd, marginBottom: marginBottom,
             marginTop: marginTop, marginHorizontal: marginHorizontal,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Dimensions, TouchableOpacity, View } from "react-native";
+import { Appearance, Dimensions, TouchableOpacity, View } from "react-native";
 import stylesheet from "../../../UIElements/StyleSheet";
 import { BackButton } from "../../../UIElements/Back";
 import TextBold from "../../../UIElements/TextBold";
@@ -10,16 +10,20 @@ import { Divider, Text } from "react-native-paper";
 import GoogleButton from "../../../UIElements/GoogleButton";
 import DarkColours from "../../../Themes/DarkColours";
 import { Loader } from "../../../UIElements/Loader";
+import CodeloomButton from "../../../UIElements/CodeloomButton";
 
 export default Login = (props) => {
 
     const [loading, setLoading] = useState(false)
+    const [themeState, setThemeState] = useState(Appearance.getColorScheme())
 
     useEffect(()=>{
-        setTimeout(() => {
-            setLoading(false)
-        }, 1000);
-    },[loading])
+        Appearance.addChangeListener(()=>{
+            setThemeState(Appearance.getColorScheme())
+        })
+    },[])
+
+
 
     return (
         <View style={[stylesheet.container, {
@@ -33,7 +37,7 @@ export default Login = (props) => {
                 <TextBold value={`Back!`} fontSize={37}
                     fontWeight={"bold"} textAlign="left" flexStart
                     marginStart={20} />
-                <TextRegular value={'Please enter your Email ID which will be used to access Vibely'}
+                <TextRegular value={'Please enter your Email ID which will be used to access Vibely.'}
                     flexStart textAlign="left"
                     marginStart={20} marginTop={10}
                     marginEnd={Dimensions.get('window').width / 3.5} />
@@ -44,10 +48,10 @@ export default Login = (props) => {
 
                 <View style={{ alignItems: 'center', marginBottom: 50 }}>
 
-                    <Custombutton text="Continue" marginTop={20} 
-                    onPress={()=>{
-                        setLoading(true)
-                    }}/>
+                    <Custombutton text="Continue" marginTop={20}
+                        onPress={() => {
+                            setLoading(true)
+                        }} />
                     <View style={{
                         flexDirection: 'row', alignItems: 'center',
                         marginTop: 20, marginBottom: 20
@@ -62,12 +66,20 @@ export default Login = (props) => {
                             backgroundColor: 'gray'
                         }} />
                     </View>
-                    <GoogleButton marginBottom={50} />
-
-
+                    <View style={{flexDirection:'row',
+                        alignItems:'center',
+                        justifyContent:'space-between',
+                        width:'85%', marginBottom:50
+                    }}>
+                        <GoogleButton />
+                        <CodeloomButton onPress={()=>{
+                            props.navigation.navigate("Codeloom")
+                        }}/>
+                    </View>
                     <Text style={{
                         fontFamily: 'Mulish-Regular',
                         paddingHorizontal: 50, textAlign: 'center',
+                        color:themeState == 'dark'? 'white' : 'black'
                     }}>
                         By tapping "Continue," I confirm that I agree to
                     </Text>
@@ -77,14 +89,14 @@ export default Login = (props) => {
                         <Text style={{
                             fontFamily: 'Mulish-Regular',
                             paddingHorizontal: 50, textAlign: 'center',
-                            color:DarkColours.primary
+                            color: DarkColours.primary
                         }}>
                             Terms & Privacy Policy
                         </Text>
                     </TouchableOpacity>
                 </View>
             </View>
-            <Loader visible={loading}/>
+            <Loader visible={loading} />
         </View>
     )
 }
