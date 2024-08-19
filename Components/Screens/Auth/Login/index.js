@@ -11,18 +11,56 @@ import GoogleButton from "../../../UIElements/GoogleButton";
 import DarkColours from "../../../Themes/DarkColours";
 import { Loader } from "../../../UIElements/Loader";
 import CodeloomButton from "../../../UIElements/CodeloomButton";
+import { auth } from "../../../../Config/firebase.config";
+import { getAdditionalUserInfo } from "firebase/auth";
 
 export default Login = (props) => {
 
     const [loading, setLoading] = useState(false)
     const [themeState, setThemeState] = useState(Appearance.getColorScheme())
 
-    useEffect(()=>{
-        Appearance.addChangeListener(()=>{
+    useEffect(() => {
+        Appearance.addChangeListener(() => {
             setThemeState(Appearance.getColorScheme())
         })
-    },[])
+    }, [])
 
+    useEffect(() => {
+        auth.onAuthStateChanged(
+            (user) => {
+                setLoading(true);
+
+                if (user) {
+                    const { metadata } = auth.currentUser || {};
+                    if (metadata) {
+                        if (metadata.creationTime === metadata.lastSignInTime) {
+                            props.navigation.reset({
+                                index: 0,
+                                routes: [{name: 'Registration'}],
+                              });
+                              
+                            setLoading(false);
+                        } else {
+                            console.log('User has signed in before.');
+                            setLoading(false);
+                        }
+                    } else {
+                        console.error('Metadata is undefined. User might not be authenticated correctly.');
+                        setLoading(false);
+                    }
+                } else {
+                    console.log('No user is signed in.');
+                    setLoading(false);
+                }
+
+            },
+            (err) => {
+                setLoading(false);
+                console.error('An error occurred during authentication state change:', err.message);
+            }
+        );
+
+    }, [])
 
 
     return (
@@ -66,20 +104,21 @@ export default Login = (props) => {
                             backgroundColor: 'gray'
                         }} />
                     </View>
-                    <View style={{flexDirection:'row',
-                        alignItems:'center',
-                        justifyContent:'space-between',
-                        width:'85%', marginBottom:50
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        width: '85%', marginBottom: 50
                     }}>
                         <GoogleButton />
-                        <CodeloomButton onPress={()=>{
+                        <CodeloomButton onPress={() => {
                             props.navigation.navigate("Codeloom")
-                        }}/>
+                        }} />
                     </View>
                     <Text style={{
                         fontFamily: 'Mulish-Regular',
                         paddingHorizontal: 50, textAlign: 'center',
-                        color:themeState == 'dark'? 'white' : 'black'
+                        color: themeState == 'dark' ? 'white' : 'black'
                     }}>
                         By tapping "Continue," I confirm that I agree to
                     </Text>

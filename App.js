@@ -15,6 +15,7 @@ import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 import PrivacyPolicy from './Components/Screens/PrivacyAndTerms';
 import Login from './Components/Screens/Auth/Login';
 import Codeloom from './Components/Screens/Codeloom';
+import Registration from './Components/Screens/Auth/Registration';
 
 const Stack = createStackNavigator();
 
@@ -110,6 +111,7 @@ function App() {
             presentation: 'modal',
             ...(TransitionPresets.ModalPresentationIOS)
           }} />
+          <Stack.Screen name='Registration' component={Registration}  />
           <Stack.Screen name='Codeloom' component={Codeloom} options={{
             animationEnabled: true, animation: 'slide_from_bottom',
             gestureEnabled: true,

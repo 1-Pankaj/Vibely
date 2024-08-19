@@ -3,7 +3,7 @@ import { Appearance, View } from "react-native"
 import Spinner from "react-native-loading-spinner-overlay"
 import { ActivityIndicator, Modal } from "react-native-paper"
 
-export const Loader = ({visible}) =>{
+export const Loader = ({visible, white}) =>{
     const [themeState, setThemeState] = useState(Appearance.getColorScheme())
 
     useEffect(()=>{
@@ -19,7 +19,7 @@ export const Loader = ({visible}) =>{
             
         }}>
             <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-                <Spinner animation="fade" visible={visible} color={themeState === 'dark'? 'white' : "black"}/>
+                <Spinner animation="fade" visible={visible} color={white? 'white' : themeState === 'dark'? 'white' : "black"}/>
             </View>
         </Modal>
     )

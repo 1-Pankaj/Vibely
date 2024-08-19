@@ -46,7 +46,7 @@ const GoogleButton = ({ text,
                 width: 30, height: 30
             }} />
             <TextRegular value={full ? 'Sign in with Google' : "Google"} bold
-                marginStart={25} inverted={full}/>
+                marginStart={20} inverted={full}/>
         </TouchableScale>
     )
 }

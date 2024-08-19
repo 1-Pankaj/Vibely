@@ -34,18 +34,18 @@ export default Onboarding = (props) => {
         loop
         renderMode="HARDWARE" />
       <TextBold value="
-        Connect easily with your family and friends anywhere"
+        Connect easily with your family and friends anywhere with Vibely"
         paddingHorizontal={50} />
       <View style={{ alignItems: 'center' }}>
-        <TouchableOpacity onPress={()=>{
+        <TouchableOpacity onPress={() => {
           props.navigation.navigate("PrivacyPolicy")
         }}>
           <TextRegular value="Terms & Privacy Policy" />
         </TouchableOpacity>
         <Custombutton text="Continue" marginTop={20}
-        onPress={()=>{
-          props.navigation.navigate("Login")
-        }}/>
+          onPress={() => {
+            props.navigation.navigate("Login")
+          }} />
       </View>
     </SafeAreaView>
   )

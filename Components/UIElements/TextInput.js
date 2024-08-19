@@ -14,21 +14,34 @@ export const CustomTextInput = ({
   marginStart,
   flexStart,
   icon,
-  dark
+  dark,
+  onBlur,
+  password,
+  error
 }) => {
-  const [themeState, setThemeState] = useState(dark? 'dark' : Appearance.getColorScheme());
+  const [themeState, setThemeState] = useState(dark ? 'dark' : Appearance.getColorScheme());
+
+  const [passwordEntry, setPasswordEntry] = useState(password)
 
   useEffect(() => {
-    const listener = () => {
-      setThemeState(Appearance.getColorScheme());
-    };
-    Appearance.addChangeListener(listener);
+    if (!dark) {
+      const listener = () => {
+        setThemeState(Appearance.getColorScheme());
+      };
+      Appearance.addChangeListener(listener);
+    } else {
+      Appearance.addChangeListener(() => {
+        setThemeState('dark')
+      })
+    }
 
   }, []);
 
   return (
     <TextInput
       label={label}
+      error={error}
+      onBlur={onBlur}
       onChangeText={onChangeText}
       style={{
         width: Dimensions.get('window').width - 65,
@@ -41,6 +54,10 @@ export const CustomTextInput = ({
         alignSelf: flexStart ? 'flex-start' : 'center',
         height: 65
       }}
+      secureTextEntry={passwordEntry ? true : false}
+      right={password ? <TextInput.Icon icon={passwordEntry ? "eye" : 'eye-off'} color={dark ? 'white' : themeState === 'dark' ?
+        'white' : 'black'
+      } onPress={() => { setPasswordEntry(!passwordEntry) }} /> : null}
       left={icon ? <TextInput.Icon icon={icon}
         color={themeState === 'dark' ? 'white' : 'black'} /> : null}
       value={value}
