@@ -18,6 +18,7 @@ import { launchImageLibraryAsync } from "expo-image-picker";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateCurrentUser, updateProfile } from "firebase/auth";
 import { Loader } from "../../../UIElements/Loader";
+import { CustomSnackbar } from "../../../UIElements/Snackbar";
 
 const Registration = (props) => {
 
@@ -35,7 +36,26 @@ const Registration = (props) => {
         })
     })
 
-    const storageRef = ref(storage, "profile")
+    const [snackVisible, setSnackVisible] = useState(false)
+    const [snackMessage, setSnackMessage] = useState("")
+    const [snackLabel, setSnackLabel] = useState("")
+
+    const ShowSnackbar = (message, label) => {
+        setSnackVisible(true);
+        setSnackMessage(message)
+        setSnackLabel(label)
+        setTimeout(() => {
+            setSnackVisible(false);
+        }, 3000);
+    }
+
+    const onDismissSnackBar = () => {
+        setSnackVisible(false)
+        setSnackMessage("")
+        setSnackLabel("")
+    }
+
+    const storageRef = ref(storage, auth.currentUser.uid)
 
     const UploadImage = async () => {
         setLoading(true);
@@ -55,10 +75,9 @@ const Registration = (props) => {
 
                 const downloadURL = await getDownloadURL(snapshot.ref);
                 setImage(downloadURL);
-                console.log('File available at', downloadURL);
             }
         } catch (err) {
-            console.log('Upload failed:', err);
+            ShowSnackbar("Failed to upload profile, try again.", "Okay")
         } finally {
             setLoading(false);
         }
@@ -72,7 +91,6 @@ const Registration = (props) => {
         } else {
             setLoadingFull(true);
             try {
-                // Update the current user's profile
                 const user = auth.currentUser;
 
                 if (user) {
@@ -80,14 +98,17 @@ const Registration = (props) => {
                         displayName: name,
                         photoURL: image
                     });
-                    setLoadingFull(false);
-                    console.log('User profile updated successfully:', user);
+                    ShowSnackbar("Profile updated Successfully.", "Okay")
+                    setTimeout(() => {
+                        props.navigation.replace("Home")
+                        setLoadingFull(false);
+                    }, 1500);
                 } else {
-                    console.log('No user is signed in.');
+                    ShowSnackbar("User not authenticated.", "Okay")
                     setLoadingFull(false);
                 }
             } catch (err) {
-                console.log('Error updating user profile:', err);
+                ShowSnackbar('Error updating profile:', err.message)
                 setLoadingFull(false);
             }
         }
@@ -151,6 +172,8 @@ const Registration = (props) => {
                 </View>
             </View>
 
+            <CustomSnackbar label={snackLabel} message={snackMessage}
+                visible={snackVisible} onDismissSnackBar={onDismissSnackBar} />
 
             <Custombutton text="Continue" onPress={() => {
                 UpdateUser()

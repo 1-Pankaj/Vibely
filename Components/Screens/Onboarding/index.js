@@ -6,16 +6,38 @@ import { Appearance, Dimensions, TouchableOpacity, View } from "react-native";
 import TextRegular from "../../UIElements/TextRegular";
 import Custombutton from "../../UIElements/Button";
 import TextBold from "../../UIElements/TextBold";
+import { Loader } from "../../UIElements/Loader";
+import { auth } from "../../../Config/firebase.config";
 
 export default Onboarding = (props) => {
 
   const [themeState, setThemeState] = useState(Appearance.getColorScheme())
+
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     Appearance.addChangeListener(() => {
       setThemeState(Appearance.getColorScheme())
     })
   }, [])
+
+  const HandleContinue = async () => {
+    setLoading(true)
+    if (auth.currentUser) {
+      if (auth.currentUser.displayName) {
+        props.navigation.replace("Home")
+        setLoading(false)
+      } else {
+        props.navigation.replace("Registration")
+        setLoading(false)
+      }
+    } else {
+      props.navigation.navigate("Login")
+      setLoading(false)
+    }
+  }
+
+
 
   return (
     <SafeAreaView style={[stylesheet.container, {
@@ -44,9 +66,10 @@ export default Onboarding = (props) => {
         </TouchableOpacity>
         <Custombutton text="Continue" marginTop={20}
           onPress={() => {
-            props.navigation.navigate("Login")
+            HandleContinue()
           }} />
       </View>
+      <Loader visible={loading} />
     </SafeAreaView>
   )
 }

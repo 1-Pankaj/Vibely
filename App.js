@@ -16,12 +16,17 @@ import PrivacyPolicy from './Components/Screens/PrivacyAndTerms';
 import Login from './Components/Screens/Auth/Login';
 import Codeloom from './Components/Screens/Codeloom';
 import Registration from './Components/Screens/Auth/Registration';
+import Home from './Components/Screens/Dashboard/Home';
+import { auth } from './Config/firebase.config';
+import LoadingScreen from './Components/Screens/Loading';
 
 const Stack = createStackNavigator();
 
 function App() {
 
   const [themeState, setThemeState] = useState(Appearance.getColorScheme())
+
+  const [user, setUser] = useState(auth.currentUser)
 
   const [loaded, error] = useFonts({
     'Mulish-Variable': require('./Components/Assets/Fonts/Mulish-Variable.ttf'),
@@ -79,6 +84,17 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user)
+      } else {
+        setUser(null)
+        return null
+      }
+    })
+  }, [])
+
   const mergedLightTheme = merge(lightThemePaper, lightThemeStack)
   const mergedDarkTheme = merge(darkThemePaper, darkThemeStack)
 
@@ -97,8 +113,11 @@ function App() {
     <PaperProvider theme={themeState == 'light' ? mergedLightTheme : mergedDarkTheme}>
       <ExpoStatusBar translucent />
       <NavigationContainer theme={themeState == 'light' ? mergedLightTheme : mergedDarkTheme}>
-        <Stack.Navigator screenOptions={{ headerShown: false, }}>
-          <Stack.Screen name="Onboarding" component={Onboarding} options={{ animation: 'slide_from_bottom', }} />
+
+        <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='LoadingScreen'>
+          <Stack.Screen name='LoadingScreen' component={LoadingScreen} />
+          <Stack.Screen name='Home' component={Home} />
+          <Stack.Screen name="Onboarding" component={Onboarding} />
           <Stack.Screen name='PrivacyPolicy' component={PrivacyPolicy} options={{
             animationEnabled: true, animation: 'slide_from_bottom',
             gestureEnabled: true,
@@ -111,15 +130,15 @@ function App() {
             presentation: 'modal',
             ...(TransitionPresets.ModalPresentationIOS)
           }} />
-          <Stack.Screen name='Registration' component={Registration}  />
+          <Stack.Screen name='Registration' component={Registration} />
           <Stack.Screen name='Codeloom' component={Codeloom} options={{
             animationEnabled: true, animation: 'slide_from_bottom',
             gestureEnabled: true,
             presentation: 'modal',
             ...(TransitionPresets.ModalPresentationIOS)
           }} />
-
         </Stack.Navigator>
+
       </NavigationContainer>
     </PaperProvider>
   );

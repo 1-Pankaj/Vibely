@@ -12,7 +12,10 @@ import DarkColours from "../../../Themes/DarkColours";
 import { Loader } from "../../../UIElements/Loader";
 import CodeloomButton from "../../../UIElements/CodeloomButton";
 import { auth } from "../../../../Config/firebase.config";
-import { getAdditionalUserInfo } from "firebase/auth";
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, signInWithEmailAndPassword } from "firebase/auth";
+import { CustomSnackbar } from "../../../UIElements/Snackbar";
+import { Stagger } from "@animatereactnative/stagger";
+import { FadeInUp, FadeOutDown } from "react-native-reanimated";
 
 export default Login = (props) => {
 
@@ -25,6 +28,139 @@ export default Login = (props) => {
         })
     }, [])
 
+    const [email, setEmail] = useState('')
+
+    const [passwordVisible, setPasswordVisible] = useState(false)
+    const [createPassword, setCreatePassword] = useState(false)
+    const [password, setPassword] = useState("")
+    const [newPassword, setNewPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+
+    const [snackVisible, setSnackVisible] = useState(false)
+    const [snackMessage, setSnackMessage] = useState("")
+    const [snackLabel, setSnackLabel] = useState("")
+
+    const [emailError, setEmailError] = useState(false)
+    const [passwordError, setPasswordError] = useState(false)
+
+
+
+    const CheckUser = async () => {
+        setLoading(true);
+
+        try {
+            if (email) {
+                const isEmail = email.includes('@');
+
+                if (isEmail) {
+                    const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+
+                    if (signInMethods.length > 0) {
+                        setPasswordVisible(true)
+                        setCreatePassword(false)
+                        setLoading(false)
+
+                    } else {
+                        setPasswordVisible(false)
+                        setPassword("")
+                        setCreatePassword(true)
+                        setLoading(false)
+                    }
+                } else {
+                    ShowSnackbar("Invalid email address", "Okay");
+                    setEmailError(true)
+                    setLoading(false);
+                }
+            } else {
+                setLoading(false)
+            }
+
+        } catch (err) {
+            setLoading(false);
+            ShowSnackbar('An error occurred:' + err.message, "Okay")
+        }
+    };
+
+    const SignInUser = async () => {
+        setLoading(true);
+        setPasswordError(false)
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            if (userCredential) {
+                ShowSnackbar("Sign In Successfull.", 'Okay')
+                setTimeout(() => {
+                    setLoading(false);
+                    console.log("Sign in successful");
+
+                }, 1500);
+            } else {
+                setLoading(false);
+                ShowSnackbar('Error signing in, Please try again.', "Okay");
+            }
+        }
+        catch (err) {
+            setLoading(false);
+            if (err.code == 'auth/wrong-password') {
+                setPasswordError(true)
+                ShowSnackbar('Wrong password, try again.', "Okay")
+            }
+            if (err.code == 'auth/too-many-requests') {
+                ShowSnackbar('Too many attempts, try again later.', "Okay")
+            }
+        }
+    }
+
+    const CreateUser = async () => {
+        setLoading(true);
+        setPasswordError(false)
+        if (newPassword && confirmPassword) {
+            if (newPassword === confirmPassword) {
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, newPassword);
+                    if (userCredential) {
+                        ShowSnackbar("Sign Up Successfull.", 'Okay')
+                        setTimeout(() => {
+                            setLoading(false);
+                            props.navigation.reset({
+                                index: 0,
+                                routes: [{ name: 'Registration' }],
+                            });
+                        }, 1500);
+                    } else {
+                        setLoading(false)
+                        ShowSnackbar("Error  creating user", "Okay")
+                    }
+                }
+                catch (err) {
+                    setLoading(false);
+                    ShowSnackbar('An error occurred:' + err.message, "Okay")
+                }
+            } else {
+                setLoading(false)
+                setPasswordError(true)
+                ShowSnackbar('Passwords do not match', "Okay")
+            }
+        } else {
+            ShowSnackbar("Please fill all the fields.", "Okay")
+            setLoading(false)
+        }
+    }
+
+    const ShowSnackbar = (message, label) => {
+        setSnackVisible(true);
+        setSnackMessage(message)
+        setSnackLabel(label)
+        setTimeout(() => {
+            setSnackVisible(false);
+        }, 3000);
+    }
+
+    const onDismissSnackBar = () => {
+        setSnackVisible(false)
+        setSnackMessage("")
+        setSnackLabel("")
+    }
+
     useEffect(() => {
         auth.onAuthStateChanged(
             (user) => {
@@ -34,15 +170,33 @@ export default Login = (props) => {
                     const { metadata } = auth.currentUser || {};
                     if (metadata) {
                         if (metadata.creationTime === metadata.lastSignInTime) {
-                            props.navigation.reset({
-                                index: 0,
-                                routes: [{name: 'Registration'}],
-                              });
-                              
+                            if (auth.currentUser.displayName) {
+                                console.log("Proceed to dashboard");
+                                setLoading(false);
+                            } else {
+                                setLoading(false)
+                                props.navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'Registration' }],
+                                });
+                            }
+                            console.log("New User");
+
+
                             setLoading(false);
                         } else {
                             console.log('User has signed in before.');
-                            setLoading(false);
+                            if (auth.currentUser.displayName) {
+                                console.log("Proceed to dashboard");
+                                setLoading(false);
+                            } else {
+                                setLoading(false)
+                                props.navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'Registration' }],
+                                });
+                            }
+
                         }
                     } else {
                         console.error('Metadata is undefined. User might not be authenticated correctly.');
@@ -81,14 +235,49 @@ export default Login = (props) => {
                     marginEnd={Dimensions.get('window').width / 3.5} />
             </View>
             <View style={{ flex: 1, justifyContent: 'space-between', }}>
-                <CustomTextInput label={"Email or Phone"} marginTop={50}
-                    icon="account" />
+                <Stagger
+                    stagger={50}
+                    duration={1000}
+                    exitDirection={-1}
+                    entering={() => FadeInUp.springify()}
+                    exiting={() => FadeOutDown.springify()}
+                >
+                    <CustomTextInput label={"Email or Phone"} marginTop={50}
+                        icon="account" value={email} onChangeText={setEmail} onBlur={CheckUser} />
+                    {
+                        passwordVisible ?
+                            <CustomTextInput label={"Password"} marginTop={10}
+                                error={passwordError} icon="lock" onChangeText={setPassword}
+                                value={password} password />
+                            :
+                            null
+                    }
+                    {
+                        createPassword ?
+                            <View>
+                                <CustomTextInput label={"Create Password"} marginTop={10}
+                                    error={passwordError} icon="lock" onChangeText={setNewPassword}
+                                    value={newPassword} password />
+                                <CustomTextInput label={"Confirm Password"} marginTop={10}
+                                    error={passwordError} icon="lock" onChangeText={setConfirmPassword}
+                                    value={confirmPassword} password />
+                            </View>
+                            :
+                            null
+                    }
+                </Stagger>
 
                 <View style={{ alignItems: 'center', marginBottom: 50 }}>
 
                     <Custombutton text="Continue" marginTop={20}
                         onPress={() => {
-                            setLoading(true)
+                            if (!passwordVisible && !createPassword) {
+                                CheckUser()
+                            } else if (passwordVisible) {
+                                SignInUser()
+                            } else if (createPassword) {
+                                CreateUser()
+                            }
                         }} />
                     <View style={{
                         flexDirection: 'row', alignItems: 'center',
@@ -112,7 +301,8 @@ export default Login = (props) => {
                     }}>
                         <GoogleButton />
                         <CodeloomButton onPress={() => {
-                            props.navigation.navigate("Codeloom")
+
+
                         }} />
                     </View>
                     <Text style={{
@@ -135,7 +325,8 @@ export default Login = (props) => {
                     </TouchableOpacity>
                 </View>
             </View>
+            <CustomSnackbar visible={snackVisible} label={snackLabel} message={snackMessage} onDismissSnackBar={onDismissSnackBar} />
             <Loader visible={loading} />
-        </View>
+        </View >
     )
 }
