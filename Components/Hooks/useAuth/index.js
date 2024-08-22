@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { auth, codeloomAuth } from './firebaseConfig'; // Adjust the import path as needed
+
 import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../../Config/firebase.config';
+import { codeloomAuth } from '../../../Config/codeloom.firebase.config';
 
 const useAuth = () => {
     const [currentAuth, setCurrentAuth] = useState(null);
