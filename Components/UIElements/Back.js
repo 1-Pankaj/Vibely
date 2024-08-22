@@ -17,15 +17,18 @@ export const BackButton = ({
         })
     }, [])
     return (
-        <TouchableScale style={{
-            width: 35, height: 35,
+        <TouchableOpacity style={{
+            width: 40, height: 40,
             alignItems: 'center', justifyContent: 'center',
             alignSelf: flexStart ? 'flex-start' : 'auto',
-            margin: margin
+            margin: margin,
+            borderWidth: 1,
+            borderRadius: 10,
+            borderColor: 'gray'
         }} onPress={() => {
             props.navigation.goBack()
-        }}>
-            <MaterialIcons name="arrow-back-ios" size={30} color={white ? 'white' : themeState == 'dark' ? 'white' : 'black'} />
-        </TouchableScale>
+        }} hitSlop={10}>
+            <MaterialIcons name="arrow-back-ios-new" size={20} color={white ? 'white' : themeState == 'dark' ? 'white' : 'black'} />
+        </TouchableOpacity>
     )
 }

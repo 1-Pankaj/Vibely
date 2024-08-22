@@ -11,16 +11,19 @@ import GoogleButton from "../../../UIElements/GoogleButton";
 import DarkColours from "../../../Themes/DarkColours";
 import { Loader } from "../../../UIElements/Loader";
 import CodeloomButton from "../../../UIElements/CodeloomButton";
-import { auth } from "../../../../Config/firebase.config";
+import { auth as AppAuth } from "../../../../Config/firebase.config";
 import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, signInWithEmailAndPassword } from "firebase/auth";
 import { CustomSnackbar } from "../../../UIElements/Snackbar";
 import { Stagger } from "@animatereactnative/stagger";
 import { FadeInUp, FadeOutDown } from "react-native-reanimated";
+import { codeloomAuth } from "../../../../Config/codeloom.firebase.config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default Login = (props) => {
 
     const [loading, setLoading] = useState(false)
     const [themeState, setThemeState] = useState(Appearance.getColorScheme())
+
 
     useEffect(() => {
         Appearance.addChangeListener(() => {
@@ -47,13 +50,13 @@ export default Login = (props) => {
 
     const CheckUser = async () => {
         setLoading(true);
-
+        setEmailError(false)
         try {
             if (email) {
                 const isEmail = email.includes('@');
 
                 if (isEmail) {
-                    const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+                    const signInMethods = await fetchSignInMethodsForEmail(AppAuth, email);
 
                     if (signInMethods.length > 0) {
                         setPasswordVisible(true)
@@ -85,13 +88,20 @@ export default Login = (props) => {
         setLoading(true);
         setPasswordError(false)
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const userCredential = await signInWithEmailAndPassword(AppAuth, email, password);
             if (userCredential) {
                 ShowSnackbar("Sign In Successfull.", 'Okay')
                 setTimeout(() => {
                     setLoading(false);
                     console.log("Sign in successful");
-
+                    if (!userCredential.user.displayName) {
+                        props.navigation.reset(
+                            {
+                                index: 0,
+                                routes: [{ name: 'Registration' }],
+                            }
+                        )
+                    }
                 }, 1500);
             } else {
                 setLoading(false);
@@ -99,6 +109,7 @@ export default Login = (props) => {
             }
         }
         catch (err) {
+
             setLoading(false);
             if (err.code == 'auth/wrong-password') {
                 setPasswordError(true)
@@ -116,7 +127,7 @@ export default Login = (props) => {
         if (newPassword && confirmPassword) {
             if (newPassword === confirmPassword) {
                 try {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, newPassword);
+                    const userCredential = await createUserWithEmailAndPassword(AppAuth, email, newPassword);
                     if (userCredential) {
                         ShowSnackbar("Sign Up Successfull.", 'Okay')
                         setTimeout(() => {
@@ -162,19 +173,21 @@ export default Login = (props) => {
     }
 
     useEffect(() => {
-        auth.onAuthStateChanged(
-            (user) => {
+        AppAuth.onAuthStateChanged(
+            async (user) => {
                 setLoading(true);
 
                 if (user) {
-                    const { metadata } = auth.currentUser || {};
+                    const { metadata } = AppAuth.currentUser || {};
                     if (metadata) {
                         if (metadata.creationTime === metadata.lastSignInTime) {
-                            if (auth.currentUser.displayName) {
+                            if (AppAuth.currentUser.displayName) {
                                 console.log("Proceed to dashboard");
+                                await AsyncStorage.setItem("auth", 'app')
                                 setLoading(false);
                             } else {
                                 setLoading(false)
+                                await AsyncStorage.setItem("auth", 'codeloom')
                                 props.navigation.reset({
                                     index: 0,
                                     routes: [{ name: 'Registration' }],
@@ -186,11 +199,74 @@ export default Login = (props) => {
                             setLoading(false);
                         } else {
                             console.log('User has signed in before.');
-                            if (auth.currentUser.displayName) {
+                            if (AppAuth.currentUser.displayName) {
+                                await AsyncStorage.setItem("auth", 'app')
+                                setLoading(false);
+                                props.navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'Home' }],
+                                });
+                            } else {
+                                setLoading(false)
+                                await AsyncStorage.setItem("auth", 'app')
+                                props.navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'Registration' }],
+                                });
+                            }
+
+                        }
+                    } else {
+                        console.error('Metadata is undefined. User might not be authenticated correctly.');
+                        setLoading(false);
+                    }
+                } else {
+                    console.log('No user is signed in.');
+                    setLoading(false);
+                }
+
+            },
+            (err) => {
+                setLoading(false);
+                console.error('An error occurred during authentication state change:', err.message);
+            }
+        );
+        codeloomAuth.onAuthStateChanged(
+            async (user) => {
+                setLoading(true);
+
+                if (user) {
+                    const { metadata } = codeloomAuth.currentUser || {};
+                    if (metadata) {
+                        if (metadata.creationTime === metadata.lastSignInTime) {
+                            if (codeloomAuth.currentUser.displayName) {
                                 console.log("Proceed to dashboard");
+                                await AsyncStorage.setItem("auth", 'codeloom')
                                 setLoading(false);
                             } else {
                                 setLoading(false)
+                                await AsyncStorage.setItem("auth", 'codeloom')
+                                props.navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'Registration' }],
+                                });
+                            }
+                            console.log("New User");
+
+
+                            setLoading(false);
+                        } else {
+                            console.log('User has signed in before.');
+                            if (codeloomAuth.currentUser.displayName) {
+                                await AsyncStorage.setItem("auth", 'codeloom')
+                                setLoading(false);
+                                props.navigation.reset({
+                                    index: 0,
+                                    routes: [{ name: 'Home' }],
+                                });
+                            } else {
+                                setLoading(false)
+                                await AsyncStorage.setItem("auth", 'codeloom')
                                 props.navigation.reset({
                                     index: 0,
                                     routes: [{ name: 'Registration' }],
@@ -214,6 +290,7 @@ export default Login = (props) => {
             }
         );
 
+
     }, [])
 
 
@@ -226,9 +303,14 @@ export default Login = (props) => {
                 <TextBold value={`Welcome`} fontSize={35}
                     fontWeight={"bold"} textAlign="left" flexStart
                     marginStart={20} marginTop={20} />
-                <TextBold value={`Back!`} fontSize={37}
-                    fontWeight={"bold"} textAlign="left" flexStart
-                    marginStart={20} />
+                <View style={{ flexDirection: 'row' }}>
+                    <TextBold value={`Back to `} fontSize={37}
+                        fontWeight={"bold"} textAlign="left" flexStart
+                        marginStart={20} />
+                    <TextBold value={`Vibely!`} fontSize={37}
+                        fontWeight={"bold"} textAlign="left" flexStart
+                        primary />
+                </View>
                 <TextRegular value={'Please enter your Email ID which will be used to access Vibely.'}
                     flexStart textAlign="left"
                     marginStart={20} marginTop={10}
@@ -243,7 +325,8 @@ export default Login = (props) => {
                     exiting={() => FadeOutDown.springify()}
                 >
                     <CustomTextInput label={"Email or Phone"} marginTop={50}
-                        icon="account" value={email} onChangeText={setEmail} onBlur={CheckUser} />
+                        icon="account" value={email} onChangeText={setEmail} onBlur={CheckUser}
+                        error={emailError} />
                     {
                         passwordVisible ?
                             <CustomTextInput label={"Password"} marginTop={10}
@@ -301,8 +384,7 @@ export default Login = (props) => {
                     }}>
                         <GoogleButton />
                         <CodeloomButton onPress={() => {
-
-
+                            props.navigation.navigate("Codeloom")
                         }} />
                     </View>
                     <Text style={{

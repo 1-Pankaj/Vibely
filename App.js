@@ -19,6 +19,7 @@ import Registration from './Components/Screens/Auth/Registration';
 import Home from './Components/Screens/Dashboard/Home';
 import { auth } from './Config/firebase.config';
 import LoadingScreen from './Components/Screens/Loading';
+import { codeloomAuth } from './Config/codeloom.firebase.config';
 
 const Stack = createStackNavigator();
 
@@ -86,6 +87,14 @@ function App() {
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user)
+      } else {
+        setUser(null)
+        return null
+      }
+    })
+    codeloomAuth.onAuthStateChanged((user) => {
       if (user) {
         setUser(user)
       } else {

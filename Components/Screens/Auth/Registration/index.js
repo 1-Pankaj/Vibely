@@ -1,5 +1,5 @@
 import react, { useEffect, useState } from "react";
-import { Appearance, Dimensions, Image, View } from "react-native";
+import { Appearance, Dimensions, Image, TouchableOpacity, View } from "react-native";
 import stylesheet from "../../../UIElements/StyleSheet";
 import { BackButton } from "../../../UIElements/Back";
 import TextBold from "../../../UIElements/TextBold";
@@ -13,12 +13,14 @@ import { CustomTextInput } from "../../../UIElements/TextInput";
 import Custombutton from "../../../UIElements/Button";
 import TouchableScale from "@jonny/touchable-scale";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ActivityIndicator, Card } from "react-native-paper";
+import { ActivityIndicator, Card, Text } from "react-native-paper";
 import { launchImageLibraryAsync } from "expo-image-picker";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateCurrentUser, updateProfile } from "firebase/auth";
 import { Loader } from "../../../UIElements/Loader";
 import { CustomSnackbar } from "../../../UIElements/Snackbar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { codeloomAuth, codeloomStorage } from "../../../../Config/codeloom.firebase.config";
 
 const Registration = (props) => {
 
@@ -29,12 +31,24 @@ const Registration = (props) => {
     const [loading, setLoading] = useState(false)
     const [name, setName] = useState("")
     const [nameError, setNameError] = useState(false)
+    const [snackVerifyVisible, setSnackVerifyVisible] = useState(false)
 
     useEffect(() => {
         Appearance.addChangeListener(() => {
             setThemeState(Appearance.getColorScheme())
         })
-    })
+        setSnackVerifyVisible(true)
+        setSnackMessage("Please check your inbox for the verification email. Didn't receive it?")
+        setSnackLabel("Resend")
+        setTimeout(() => {
+            setSnackVerifyVisible(false)
+        }, 8000);
+    }, [])
+
+    const SnackVerifyDismiss = () => {
+        setSnackVerifyVisible(false)
+        ShowSnackbar("Verification email sent successfully!", "Okay")
+    }
 
     const [snackVisible, setSnackVisible] = useState(false)
     const [snackMessage, setSnackMessage] = useState("")
@@ -55,7 +69,28 @@ const Registration = (props) => {
         setSnackLabel("")
     }
 
-    const storageRef = ref(storage, auth.currentUser.uid)
+    const [storageRef, setStorageRef] = useState(null)
+
+    const [authState, setAuthState] = useState(null)
+
+    const GetAuthMode = async () => {
+        const auth = await AsyncStorage.getItem("auth")
+        if (auth) {
+            if (auth == 'app') {
+                const storageref = ref(storage, auth.currentUser.uid)
+                setStorageRef(storageref)
+                setAuthState(auth)
+            } else {
+                const storageref = ref(codeloomStorage, codeloomAuth.currentUser.uid)
+                setStorageRef(storageref)
+                setAuthState(codeloomAuth)
+            }
+        }
+    }
+
+    useEffect(() => {
+        GetAuthMode()
+    }, [])
 
     const UploadImage = async () => {
         setLoading(true);
@@ -78,6 +113,8 @@ const Registration = (props) => {
             }
         } catch (err) {
             ShowSnackbar("Failed to upload profile, try again.", "Okay")
+            console.log(err);
+            
         } finally {
             setLoading(false);
         }
@@ -91,7 +128,7 @@ const Registration = (props) => {
         } else {
             setLoadingFull(true);
             try {
-                const user = auth.currentUser;
+                const user = authState.currentUser;
 
                 if (user) {
                     await updateProfile(user, {
@@ -174,10 +211,14 @@ const Registration = (props) => {
 
             <CustomSnackbar label={snackLabel} message={snackMessage}
                 visible={snackVisible} onDismissSnackBar={onDismissSnackBar} />
+            <CustomSnackbar label={snackLabel} message={snackMessage}
+                visible={snackVerifyVisible} onDismissSnackBar={SnackVerifyDismiss} />
+
 
             <Custombutton text="Continue" onPress={() => {
                 UpdateUser()
-            }} />
+            }} marginBottom={30} />
+
             <Loader visible={loadingFull} />
         </SafeAreaView>
     )

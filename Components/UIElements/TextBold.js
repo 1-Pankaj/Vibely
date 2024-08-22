@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Appearance } from "react-native"
 import { PaperProvider, Text } from "react-native-paper"
+import DarkColours from "../Themes/DarkColours"
 
 const TextBold = ({ value,
     marginStart,
@@ -15,7 +16,8 @@ const TextBold = ({ value,
     fontWeight,
     textAlign,
     flexStart,
-    inverted
+    inverted,
+    primary
 }) => {
 
 
@@ -27,17 +29,17 @@ const TextBold = ({ value,
 
     return (
         <Text style={{
-            fontSize: fontSize? fontSize : 24,
+            fontSize: fontSize ? fontSize : 24,
             fontFamily: 'Mulish-Bold',
-            fontWeight: fontWeight? fontWeight : 'condensed',
-            textAlign: textAlign? textAlign : 'center',
+            fontWeight: fontWeight ? fontWeight : 'condensed',
+            textAlign: textAlign ? textAlign : 'center',
             paddingHorizontal: paddingHorizontal,
-            color: inverted? 'white' : themeState === 'dark' ? 'white' : 'black',
+            color: primary ? DarkColours.primary : inverted ? 'white' : themeState === 'dark' ? 'white' : 'black',
             marginStart: marginStart,
             marginEnd: marginEnd, marginBottom: marginBottom,
             marginTop: marginTop, marginHorizontal: marginHorizontal,
-            marginVertical: marginVertical,padding:padding,
-            alignSelf:flexStart? 'flex-start' : 'center'
+            marginVertical: marginVertical, padding: padding,
+            alignSelf: flexStart ? 'flex-start' : 'center'
         }}>
             {value}
         </Text>

@@ -10,6 +10,7 @@ import TextBold from "../../UIElements/TextBold";
 import TextRegular from "../../UIElements/TextRegular";
 import { ActivityIndicator } from "react-native-paper";
 import { auth } from "../../../Config/firebase.config";
+import { codeloomAuth } from "../../../Config/codeloom.firebase.config";
 
 const LoadingScreen = (props) => {
     function getRandomLoaderText() {
@@ -29,6 +30,23 @@ const LoadingScreen = (props) => {
 
     useEffect(() => {
         auth.onAuthStateChanged((user) => {
+            if (user) {
+                if (user.displayName) {
+                    setTimeout(() => {
+                        props.navigation.navigate('Home')
+                    }, 1500);
+                } else {
+                    setTimeout(() => {
+                        props.navigation.navigate('Registration')
+                    }, 1500);
+                }
+            } else {
+                setTimeout(() => {
+                    props.navigation.navigate('Onboarding')
+                }, 1500);
+            }
+        })
+        codeloomAuth.onAuthStateChanged((user) => {
             if (user) {
                 if (user.displayName) {
                     setTimeout(() => {

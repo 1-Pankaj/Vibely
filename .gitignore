@@ -35,8 +35,6 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-#firebase config
-config/
 
 #notefile
 Notefiles/

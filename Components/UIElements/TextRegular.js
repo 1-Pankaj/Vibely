@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Appearance } from "react-native"
 import { PaperProvider, Text } from "react-native-paper"
+import DarkColours from "../Themes/DarkColours"
 
 const TextRegular = ({ value,
     marginStart,
@@ -13,7 +14,8 @@ const TextRegular = ({ value,
     inverted,
     flexStart,
     paddingHorizontal,
-    textAlign
+    textAlign,
+    primary
 }) => {
 
     const [themeState, setThemeState] = useState(Appearance.getColorScheme())
@@ -24,17 +26,17 @@ const TextRegular = ({ value,
 
     return (
         <Text style={{
-            fontSize: bold? 18 : 16,
-            fontFamily: bold? 'Mulish-SemiBold' : 'Mulish-Regular',
+            fontSize: bold ? 18 : 16,
+            fontFamily: bold ? 'Mulish-SemiBold' : 'Mulish-Regular',
             fontWeight: 'regular',
-            color: inverted? 'white' : themeState === 'dark' ? 'white' : 'black',
+            color: primary ? DarkColours.primary : inverted ? 'white' : themeState === 'dark' ? 'white' : 'black',
             marginStart: marginStart,
             marginEnd: marginEnd, marginBottom: marginBottom,
             marginTop: marginTop, marginHorizontal: marginHorizontal,
             marginVertical: marginVertical,
-            alignSelf:flexStart? 'flex-start' : 'center',
-            paddingHorizontal:paddingHorizontal,
-            textAlign:textAlign? textAlign : 'center'
+            alignSelf: flexStart ? 'flex-start' : 'center',
+            paddingHorizontal: paddingHorizontal,
+            textAlign: textAlign ? textAlign : 'center'
         }}>
             {value}
         </Text>

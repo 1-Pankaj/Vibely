@@ -14,12 +14,15 @@ import Custombutton from "../../UIElements/Button";
 import GoogleButton from "../../UIElements/GoogleButton";
 import { Loader } from "../../UIElements/Loader";
 
-import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../Config/firebase.config";
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { codeloomAuth, codeloomDatabase } from "../../../Config/codeloom.firebase.config";
 import { CustomSnackbar } from "../../UIElements/Snackbar";
 import { Stagger } from "@animatereactnative/stagger";
 import { FadeInUp, FadeOutDown } from "react-native-reanimated";
 import TouchableScale from "@jonny/touchable-scale";
+import { auth, database } from "../../../Config/firebase.config";
+import { ref, set } from "firebase/database";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const Codeloom = (props) => {
@@ -43,16 +46,16 @@ const Codeloom = (props) => {
     const [passwordError, setPasswordError] = useState(false)
 
 
-
     const CheckUser = async () => {
         setLoading(true);
-
+        setEmailError(false)
         try {
             if (email) {
                 const isEmail = email.includes('@');
 
                 if (isEmail) {
-                    const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+                    const signInMethods = await fetchSignInMethodsForEmail(codeloomAuth, email);
+                    console.log(signInMethods, email);
 
                     if (signInMethods.length > 0) {
                         setPasswordVisible(true)
@@ -84,10 +87,11 @@ const Codeloom = (props) => {
         setLoading(true);
         setPasswordError(false)
         try {
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const userCredential = await signInWithEmailAndPassword(codeloomAuth, email, password);
             if (userCredential) {
                 ShowSnackbar("Sign In Successfull.", 'Okay')
-                setTimeout(() => {
+                setTimeout(async () => {
+                    await AsyncStorage.setItem('auth', 'codeloom')
                     setLoading(false);
                     props.navigation.goBack()
                 }, 1500);
@@ -114,13 +118,24 @@ const Codeloom = (props) => {
         if (newPassword && confirmPassword) {
             if (newPassword === confirmPassword) {
                 try {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, newPassword);
+                    const userCredential = await createUserWithEmailAndPassword(codeloomAuth, email, newPassword);
                     if (userCredential) {
                         ShowSnackbar("Sign Up Successfull.", 'Okay')
-                        setTimeout(() => {
+                        set(ref(database, 'users/' + userCredential.user.uid), {
+                            email: email,
+                            uid: userCredential.user.uid
+                        }).then(async () => {
+                            await AsyncStorage.setItem('auth', 'codeloom')
                             setLoading(false);
                             props.navigation.goBack()
-                        }, 1500);
+                        }).catch((err) => {
+                            setLoading(false);
+                            ShowSnackbar("Error : " + err.message, "Okay")
+                        });
+
+
+
+
                     } else {
                         setLoading(false)
                         ShowSnackbar("Error  creating user", "Okay")
