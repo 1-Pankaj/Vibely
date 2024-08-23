@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react";
-import { Appearance, Dimensions, ImageBackground, TouchableOpacity, View } from "react-native";
+import { Appearance, Dimensions, ImageBackground, ScrollView, TouchableOpacity, View } from "react-native";
 import stylesheet from "../../UIElements/StyleSheet";
 import { BackButton } from "../../UIElements/Back";
 import { BlurView } from "expo-blur";
@@ -92,7 +92,6 @@ const Codeloom = (props) => {
                 ShowSnackbar("Sign In Successfull.", 'Okay')
                 await AsyncStorage.setItem('auth', 'codeloom')
                 setLoading(false);
-                props.navigation.navigate("Login")
             } else {
                 setLoading(false);
                 ShowSnackbar('Error signing in, Please try again.', "Okay");
@@ -126,7 +125,6 @@ const Codeloom = (props) => {
                             await AsyncStorage.setItem('auth', 'codeloom')
                             setLoading(false);
                             sendEmailVerification(userCredential.user)
-                            props.navigation.navigate("Login")
                         }).catch((err) => {
                             setLoading(false);
                             ShowSnackbar("Error : " + err.message, "Okay")
@@ -199,57 +197,67 @@ const Codeloom = (props) => {
                         <CodeloomIcon />
                     </TouchableScale>
                 </View>
-                <TextBold value={`Experience`} fontSize={35}
-                    fontWeight={"bold"} textAlign="left" flexStart
-                    marginStart={20} marginTop={20} inverted />
-                <TextBold value={`Codeloom One`} fontSize={37}
-                    fontWeight={"bold"} textAlign="left" flexStart
-                    marginStart={20} inverted />
-                <TextRegular value={'Sign in or Create Codeloom One account with Email or Phone to get started.'}
-                    flexStart textAlign="left"
-                    marginStart={20} marginTop={10}
-                    marginEnd={Dimensions.get('window').width / 5} inverted />
 
-                <View style={{ flex: 1, justifyContent: 'space-between', }}>
+
+                <ScrollView style={{}}
+                    contentContainerStyle={{ justifyContent: 'space-between', }}
+                    showsVerticalScrollIndicator={false}>
                     <View>
-                        <Stagger
-                            stagger={50}
-                            duration={1000}
-                            exitDirection={-1}
-                            entering={() => FadeInUp.springify()}
-                            exiting={() => FadeOutDown.springify()}
-                        >
+                        <TextBold value={`Experience`} fontSize={35}
+                            fontWeight={"bold"} textAlign="left" flexStart
+                            marginStart={20} marginTop={20} inverted />
+                        <TextBold value={`Codeloom One`} fontSize={37}
+                            fontWeight={"bold"} textAlign="left" flexStart
+                            marginStart={20} inverted />
+                        <TextRegular value={'Sign in or Create Codeloom One account with Email or Phone to get started.'}
+                            flexStart textAlign="left"
+                            marginStart={20} marginTop={10}
+                            marginEnd={Dimensions.get('window').width / 5} inverted />
+                    </View>
+                    <Stagger
+                        stagger={50}
+                        duration={1000}
+                        exitDirection={-1}
+                        entering={() => FadeInUp.springify()}
+                        exiting={() => FadeOutDown.springify()}
+                    >
 
-                            <CustomTextInput label={"Email or Phone"} marginTop={50}
-                                icon="person" dark value={email} onChangeText={setEmail}
-                                onBlur={CheckUser} error={emailError} />
-                            {passwordVisible ?
-                                <CustomTextInput label={"Password"} marginTop={10}
-                                    icon="lock" dark value={password} onChangeText={setPassword}
-                                    password error={passwordError} />
+                        <CustomTextInput label={"Email or Phone"} marginTop={50}
+                            icon="person" dark value={email} onChangeText={setEmail}
+                            onBlur={CheckUser} error={emailError} />
+                        {passwordVisible ?
+                            <CustomTextInput label={"Password"} marginTop={10}
+                                icon="lock" dark value={password} onChangeText={setPassword}
+                                password error={passwordError} />
+                            :
+                            null
+                        }
+                        {
+                            createPassword ?
+                                <View>
+                                    <CustomTextInput label={"Create Password"} marginTop={10}
+                                        icon="lock" dark value={newPassword} onChangeText={setNewPassword}
+                                        password error={passwordError} />
+                                    <CustomTextInput label={"Confirm Password"} marginTop={10}
+                                        icon="lock" dark value={confirmPassword} onChangeText={setConfirmPassword}
+                                        password error={passwordError} />
+                                </View>
                                 :
                                 null
-                            }
-                            {
-                                createPassword ?
-                                    <View>
-                                        <CustomTextInput label={"Create Password"} marginTop={10}
-                                            icon="lock" dark value={newPassword} onChangeText={setNewPassword}
-                                            password error={passwordError} />
-                                        <CustomTextInput label={"Confirm Password"} marginTop={10}
-                                            icon="lock" dark value={confirmPassword} onChangeText={setConfirmPassword}
-                                            password error={passwordError} />
-                                    </View>
-                                    :
-                                    null
-                            }
+                        }
 
-                        </Stagger>
-                    </View>
+                    </Stagger>
 
                     <View style={{ alignItems: 'center', marginBottom: 50 }}>
 
-                        <Custombutton text="Continue" marginTop={20}
+                        <Custombutton text={passwordVisible ?
+                            'Sign In'
+                            :
+                            createPassword ?
+                                'Create Account'
+                                :
+                                "Continue"
+                        } marginTop={20}
                             onPress={() => {
                                 if (!passwordVisible && !createPassword) {
                                     CheckUser()
@@ -301,7 +309,7 @@ const Codeloom = (props) => {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </ScrollView>
             </ImageBackground>
             <CustomSnackbar visible={snackVisible} message={snackMessage}
                 onDismissSnackBar={onDismissSnackBar} label={snackLabel} />

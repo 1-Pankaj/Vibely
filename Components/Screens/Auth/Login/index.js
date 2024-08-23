@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Appearance, Dimensions, TouchableOpacity, View } from "react-native";
+import { Appearance, Dimensions, ScrollView, TouchableOpacity, View } from "react-native";
 import stylesheet from "../../../UIElements/StyleSheet";
 import { BackButton } from "../../../UIElements/Back";
 import TextBold from "../../../UIElements/TextBold";
@@ -289,30 +289,36 @@ export default Login = (props) => {
         <View style={[stylesheet.container, {
             justifyContent: 'space-between'
         }]}>
-            <View>
+            <View style={{width:'100%'}}>
                 <View style={{
                     marginTop: 25, paddingVertical: 10,
-                    marginStart: 20
+                    marginStart: 20, width:'100%'
                 }}>
                     <BackButton props={props} />
                 </View>
-                <TextBold value={`Welcome`} fontSize={35}
-                    fontWeight={"bold"} textAlign="left" flexStart
-                    marginStart={20} marginTop={20} />
-                <View style={{ flexDirection: 'row' }}>
-                    <TextBold value={`Back to `} fontSize={37}
-                        fontWeight={"bold"} textAlign="left" flexStart
-                        marginStart={20} />
-                    <TextBold value={`Vibely!`} fontSize={37}
-                        fontWeight={"bold"} textAlign="left" flexStart
-                        primary />
-                </View>
-                <TextRegular value={'Please enter your Email ID which will be used to access Vibely.'}
-                    flexStart textAlign="left"
-                    marginStart={20} marginTop={10}
-                    marginEnd={Dimensions.get('window').width / 3.5} />
+
             </View>
-            <View style={{ flex: 1, justifyContent: 'space-between', }}>
+            <ScrollView style={{ flex: 1,  }}
+            contentContainerStyle={{justifyContent: 'space-between',
+            }}
+            showsVerticalScrollIndicator={false}>
+                <View>
+                    <TextBold value={`Welcome`} fontSize={35}
+                        fontWeight={"bold"} textAlign="left" flexStart
+                        marginStart={20} marginTop={20} />
+                    <View style={{ flexDirection: 'row' }}>
+                        <TextBold value={`Back to `} fontSize={37}
+                            fontWeight={"bold"} textAlign="left" flexStart
+                            marginStart={20} />
+                        <TextBold value={`Vibely!`} fontSize={37}
+                            fontWeight={"bold"} textAlign="left" flexStart
+                            primary />
+                    </View>
+                    <TextRegular value={'Please enter your Email ID which will be used to access Vibely.'}
+                        flexStart textAlign="left"
+                        marginStart={20} marginTop={10}
+                        marginEnd={Dimensions.get('window').width / 3.5} />
+                </View>
                 <Stagger
                     stagger={50}
                     duration={1000}
@@ -348,7 +354,14 @@ export default Login = (props) => {
 
                 <View style={{ alignItems: 'center', marginBottom: 50 }}>
 
-                    <Custombutton text="Continue" marginTop={20}
+                    <Custombutton text={passwordVisible?
+                        'Sign In'
+                        :
+                        createPassword?
+                        'Create Account'
+                        :
+                        "Continue"
+                    } marginTop={20}
                         onPress={() => {
                             if (!passwordVisible && !createPassword) {
                                 CheckUser()
@@ -402,7 +415,7 @@ export default Login = (props) => {
                         </Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </ScrollView>
             <CustomSnackbar visible={snackVisible} label={snackLabel} message={snackMessage} onDismissSnackBar={onDismissSnackBar} />
             <Loader visible={loading} />
         </View >
