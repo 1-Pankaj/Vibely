@@ -12,7 +12,7 @@ import DarkColours from "../../../Themes/DarkColours";
 import { Loader } from "../../../UIElements/Loader";
 import CodeloomButton from "../../../UIElements/CodeloomButton";
 import { auth as AppAuth } from "../../../../Config/firebase.config";
-import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { CustomSnackbar } from "../../../UIElements/Snackbar";
 import { Stagger } from "@animatereactnative/stagger";
 import { FadeInUp, FadeOutDown } from "react-native-reanimated";
@@ -91,17 +91,10 @@ export default Login = (props) => {
             const userCredential = await signInWithEmailAndPassword(AppAuth, email, password);
             if (userCredential) {
                 ShowSnackbar("Sign In Successfull.", 'Okay')
+                await AsyncStorage.setItem("auth", 'app')
                 setTimeout(() => {
                     setLoading(false);
                     console.log("Sign in successful");
-                    if (!userCredential.user.displayName) {
-                        props.navigation.reset(
-                            {
-                                index: 0,
-                                routes: [{ name: 'Registration' }],
-                            }
-                        )
-                    }
                 }, 1500);
             } else {
                 setLoading(false);
@@ -130,12 +123,10 @@ export default Login = (props) => {
                     const userCredential = await createUserWithEmailAndPassword(AppAuth, email, newPassword);
                     if (userCredential) {
                         ShowSnackbar("Sign Up Successfull.", 'Okay')
+                        await AsyncStorage.setItem("auth", 'app')
                         setTimeout(() => {
                             setLoading(false);
-                            props.navigation.reset({
-                                index: 0,
-                                routes: [{ name: 'Registration' }],
-                            });
+                            sendEmailVerification(userCredential.user)
                         }, 1500);
                     } else {
                         setLoading(false)
@@ -299,7 +290,12 @@ export default Login = (props) => {
             justifyContent: 'space-between'
         }]}>
             <View>
-                <BackButton props={props} flexStart margin={25} />
+                <View style={{
+                    marginTop: 25, paddingVertical: 10,
+                    marginStart: 20
+                }}>
+                    <BackButton props={props} />
+                </View>
                 <TextBold value={`Welcome`} fontSize={35}
                     fontWeight={"bold"} textAlign="left" flexStart
                     marginStart={20} marginTop={20} />
@@ -325,7 +321,7 @@ export default Login = (props) => {
                     exiting={() => FadeOutDown.springify()}
                 >
                     <CustomTextInput label={"Email or Phone"} marginTop={50}
-                        icon="account" value={email} onChangeText={setEmail} onBlur={CheckUser}
+                        icon="person" value={email} onChangeText={setEmail} onBlur={CheckUser}
                         error={emailError} />
                     {
                         passwordVisible ?

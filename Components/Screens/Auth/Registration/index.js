@@ -16,7 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator, Card, Text } from "react-native-paper";
 import { launchImageLibraryAsync } from "expo-image-picker";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { updateCurrentUser, updateProfile } from "firebase/auth";
+import { sendEmailVerification, updateCurrentUser, updateProfile } from "firebase/auth";
 import { Loader } from "../../../UIElements/Loader";
 import { CustomSnackbar } from "../../../UIElements/Snackbar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -45,8 +45,13 @@ const Registration = (props) => {
         }, 8000);
     }, [])
 
-    const SnackVerifyDismiss = () => {
+    const SnackVerifyDismiss = async () => {
         setSnackVerifyVisible(false)
+        if (auth.currentUser) {
+            await sendEmailVerification(auth.currentUser)
+        } else if (codeloomAuth.currentUser) {
+            await sendEmailVerification(codeloomAuth.currentUser)
+        }
         ShowSnackbar("Verification email sent successfully!", "Okay")
     }
 
@@ -74,12 +79,12 @@ const Registration = (props) => {
     const [authState, setAuthState] = useState(null)
 
     const GetAuthMode = async () => {
-        const auth = await AsyncStorage.getItem("auth")
-        if (auth) {
-            if (auth == 'app') {
+        const authItem = await AsyncStorage.getItem("auth")
+        if (authItem) {
+            if (authItem == 'app') {
                 const storageref = ref(storage, auth.currentUser.uid)
                 setStorageRef(storageref)
-                setAuthState(auth)
+                setAuthState(authItem)
             } else {
                 const storageref = ref(codeloomStorage, codeloomAuth.currentUser.uid)
                 setStorageRef(storageref)
@@ -114,7 +119,7 @@ const Registration = (props) => {
         } catch (err) {
             ShowSnackbar("Failed to upload profile, try again.", "Okay")
             console.log(err);
-            
+
         } finally {
             setLoading(false);
         }
@@ -205,7 +210,7 @@ const Registration = (props) => {
                             }
                         </TouchableScale>}
                     <CustomTextInput label="Full Name" marginTop={25}
-                        error={nameError} value={name} onChangeText={setName} icon="account" />
+                        error={nameError} value={name} onChangeText={setName} icon="person" />
                 </View>
             </View>
 
@@ -215,11 +220,12 @@ const Registration = (props) => {
                 visible={snackVerifyVisible} onDismissSnackBar={SnackVerifyDismiss} />
 
 
-            <Custombutton text="Continue" onPress={() => {
-                UpdateUser()
-            }} marginBottom={30} />
+
 
             <Loader visible={loadingFull} />
+            <Custombutton text="Continue" onPress={() => {
+                UpdateUser()
+            }} />
         </SafeAreaView>
     )
 }

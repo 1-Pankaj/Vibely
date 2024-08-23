@@ -6,17 +6,19 @@ import WebView from "react-native-webview";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { Divider } from "react-native-paper";
+import { BackButton } from "../../UIElements/Back";
 
 const PrivacyAndTerms = (props) => {
     return (
         <View style={{ flex: 1, width: '100%', height: '100%' }}>
-            <View style={{ width: '100%', alignItems: 'center', flexDirection: 'row', backgroundColor: 'white' }}>
-                <TouchableOpacity onPress={() => { props.navigation.goBack() }}
-                    style={{ paddingVertical: 10, marginTop: 10, marginStart: 20 }}>
-                    <MaterialIcons name="arrow-back-ios" size={30} />
-                </TouchableOpacity>
+            <View style={{
+                width: '100%', alignItems: 'center', flexDirection: 'row', backgroundColor: 'white',
+                paddingVertical: 10, marginTop: 25
+                , marginStart: 20
+            }}>
+                <BackButton props={props} />
             </View>
-            <Divider style={{backgroundColor:'#eee'}}/>
+            <Divider style={{ backgroundColor: '#eee' }} />
             <WebView
                 useWebView2
                 forceDarkOn

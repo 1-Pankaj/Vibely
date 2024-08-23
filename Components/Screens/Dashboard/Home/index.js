@@ -5,8 +5,9 @@ import stylesheet from "../../../UIElements/StyleSheet";
 import useAuth from "../../../Hooks/useAuth";
 
 const Home = (props) => {
-    const auth = useAuth()
-console.log(auth.currentAuth.currentUser.displayName );
+    const auth = useAuth().currentAuth
+    console.log(auth?.currentUser.displayName);
+    
 
     return (
         <SafeAreaView style={[stylesheet.container]}>

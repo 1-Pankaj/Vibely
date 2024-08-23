@@ -14,7 +14,7 @@ import Custombutton from "../../UIElements/Button";
 import GoogleButton from "../../UIElements/GoogleButton";
 import { Loader } from "../../UIElements/Loader";
 
-import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, fetchSignInMethodsForEmail, getAuth, sendEmailVerification, signInWithEmailAndPassword } from "firebase/auth";
 import { codeloomAuth, codeloomDatabase } from "../../../Config/codeloom.firebase.config";
 import { CustomSnackbar } from "../../UIElements/Snackbar";
 import { Stagger } from "@animatereactnative/stagger";
@@ -90,11 +90,9 @@ const Codeloom = (props) => {
             const userCredential = await signInWithEmailAndPassword(codeloomAuth, email, password);
             if (userCredential) {
                 ShowSnackbar("Sign In Successfull.", 'Okay')
-                setTimeout(async () => {
-                    await AsyncStorage.setItem('auth', 'codeloom')
-                    setLoading(false);
-                    props.navigation.goBack()
-                }, 1500);
+                await AsyncStorage.setItem('auth', 'codeloom')
+                setLoading(false);
+                props.navigation.navigate("Login")
             } else {
                 setLoading(false);
                 ShowSnackbar('Error signing in, Please try again.', "Okay");
@@ -127,7 +125,8 @@ const Codeloom = (props) => {
                         }).then(async () => {
                             await AsyncStorage.setItem('auth', 'codeloom')
                             setLoading(false);
-                            props.navigation.goBack()
+                            sendEmailVerification(userCredential.user)
+                            props.navigation.navigate("Login")
                         }).catch((err) => {
                             setLoading(false);
                             ShowSnackbar("Error : " + err.message, "Okay")
@@ -187,11 +186,15 @@ const Codeloom = (props) => {
 
                 <View style={{
                     flexDirection: 'row', alignItems: 'center',
-                    width: '85%', justifyContent: 'space-between',
-                    alignSelf: 'center', marginVertical: 25
+                    width: '90%', justifyContent: 'space-between',
+                    alignSelf: 'center',
+                    paddingVertical: 25,
+                    marginTop: 25,
                 }}>
-                    <BackButton props={props} flexStart white
-                    />
+                    <View style={{
+                    }}>
+                        <BackButton props={props} flexStart white />
+                    </View>
                     <TouchableScale>
                         <CodeloomIcon />
                     </TouchableScale>
@@ -218,7 +221,7 @@ const Codeloom = (props) => {
                         >
 
                             <CustomTextInput label={"Email or Phone"} marginTop={50}
-                                icon="account" dark value={email} onChangeText={setEmail}
+                                icon="person" dark value={email} onChangeText={setEmail}
                                 onBlur={CheckUser} error={emailError} />
                             {passwordVisible ?
                                 <CustomTextInput label={"Password"} marginTop={10}
