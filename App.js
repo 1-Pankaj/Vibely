@@ -27,7 +27,6 @@ function App() {
 
   const [themeState, setThemeState] = useState(Appearance.getColorScheme())
 
-  const [user, setUser] = useState(auth.currentUser)
 
   const [loaded, error] = useFonts({
     'Mulish-Variable': require('./Components/Assets/Fonts/Mulish-Variable.ttf'),
@@ -84,25 +83,6 @@ function App() {
       text: "#F7F7FC"
     }
   }
-
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUser(user)
-      } else {
-        setUser(null)
-        return null
-      }
-    })
-    codeloomAuth.onAuthStateChanged((user) => {
-      if (user) {
-        setUser(user)
-      } else {
-        setUser(null)
-        return null
-      }
-    })
-  }, [])
 
   const mergedLightTheme = merge(lightThemePaper, lightThemeStack)
   const mergedDarkTheme = merge(darkThemePaper, darkThemeStack)

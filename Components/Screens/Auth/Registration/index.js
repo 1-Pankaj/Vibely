@@ -21,6 +21,7 @@ import { Loader } from "../../../UIElements/Loader";
 import { CustomSnackbar } from "../../../UIElements/Snackbar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { codeloomAuth, codeloomStorage } from "../../../../Config/codeloom.firebase.config";
+import useAuth from "../../../Hooks/useAuth";
 
 const Registration = (props) => {
 
@@ -39,7 +40,7 @@ const Registration = (props) => {
         })
         setSnackVerifyVisible(true)
         setSnackMessage("Please check your inbox for the verification email. Didn't receive it?")
-        setSnackLabel("Resend")
+        setSnackLabel("Okay")
         setTimeout(() => {
             setSnackVerifyVisible(false)
         }, 8000);
@@ -47,12 +48,6 @@ const Registration = (props) => {
 
     const SnackVerifyDismiss = async () => {
         setSnackVerifyVisible(false)
-        if (auth.currentUser) {
-            await sendEmailVerification(auth.currentUser)
-        } else if (codeloomAuth.currentUser) {
-            await sendEmailVerification(codeloomAuth.currentUser)
-        }
-        ShowSnackbar("Verification email sent successfully!", "Okay")
     }
 
     const [snackVisible, setSnackVisible] = useState(false)
@@ -76,7 +71,6 @@ const Registration = (props) => {
 
     const [storageRef, setStorageRef] = useState(null)
 
-    const [authState, setAuthState] = useState(null)
 
     const GetAuthMode = async () => {
         const authItem = await AsyncStorage.getItem("auth")
@@ -84,11 +78,9 @@ const Registration = (props) => {
             if (authItem == 'app') {
                 const storageref = ref(storage, auth.currentUser.uid)
                 setStorageRef(storageref)
-                setAuthState(authItem)
             } else {
                 const storageref = ref(codeloomStorage, codeloomAuth.currentUser.uid)
                 setStorageRef(storageref)
-                setAuthState(codeloomAuth)
             }
         }
     }
@@ -104,7 +96,7 @@ const Registration = (props) => {
             const rs = await launchImageLibraryAsync({
                 allowsEditing: true,
                 allowsMultipleSelection: false,
-                quality: 0.7,
+                quality: 0.6,
             });
 
             if (!rs.canceled) {
@@ -125,6 +117,8 @@ const Registration = (props) => {
         }
     };
 
+    const user = useAuth().currentAuth?.currentUser;
+
     const [loadingFull, setLoadingFull] = useState(false)
 
     const UpdateUser = async () => {
@@ -133,7 +127,7 @@ const Registration = (props) => {
         } else {
             setLoadingFull(true);
             try {
-                const user = authState.currentUser;
+                
 
                 if (user) {
                     await updateProfile(user, {

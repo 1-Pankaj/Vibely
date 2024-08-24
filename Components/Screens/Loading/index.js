@@ -11,6 +11,7 @@ import TextRegular from "../../UIElements/TextRegular";
 import { ActivityIndicator } from "react-native-paper";
 import { auth } from "../../../Config/firebase.config";
 import { codeloomAuth } from "../../../Config/codeloom.firebase.config";
+import useAuth from "../../Hooks/useAuth";
 
 const LoadingScreen = (props) => {
     function getRandomLoaderText() {
@@ -20,6 +21,8 @@ const LoadingScreen = (props) => {
 
     const [themeState, setThemeState] = useState(Appearance.getColorScheme())
 
+    const user = useAuth().currentAuth?.currentUser
+
     useEffect(() => {
         Appearance.addChangeListener(() => {
             setThemeState(Appearance.getColorScheme())
@@ -28,42 +31,37 @@ const LoadingScreen = (props) => {
 
     const [randomText, setRandomText] = useState(getRandomLoaderText())
 
+    const CheckUserExist = async () => {
+        const userExist = await user
+        console.log(userExist);
+        return userExist
+        
+        
+    }
+
     useEffect(() => {
-        auth.onAuthStateChanged((user) => {
-            if (user) {
+        CheckUserExist().then((rs) => {
+            if (rs) {
                 if (user.displayName) {
                     setTimeout(() => {
-                        props.navigation.navigate('Home')
-                    }, 1500);
+                        props.navigation.replace('Home')
+                    }, 0);
                 } else {
                     setTimeout(() => {
-                        props.navigation.navigate('Registration')
-                    }, 1500);
+                        props.navigation.replace('Registration')
+                    }, 0);
                 }
             } else {
                 setTimeout(() => {
-                    props.navigation.navigate('Onboarding')
-                }, 1500);
+                    props.navigation.replace('Onboarding')
+                }, 0);
             }
+        }).catch((err) => {
+            console.log(err);
+
         })
-        codeloomAuth.onAuthStateChanged((user) => {
-            if (user) {
-                if (user.displayName) {
-                    setTimeout(() => {
-                        props.navigation.navigate('Home')
-                    }, 1500);
-                } else {
-                    setTimeout(() => {
-                        props.navigation.navigate('Registration')
-                    }, 1500);
-                }
-            } else {
-                setTimeout(() => {
-                    props.navigation.navigate('Onboarding')
-                }, 1500);
-            }
-        })
-    }, [])
+
+    }, [user])
 
     return (
         <SafeAreaView style={[stylesheet.container, {
@@ -90,11 +88,10 @@ const LoadingScreen = (props) => {
                 position: 'absolute',
                 bottom: 30, alignItems: 'center'
             }}>
-                <ActivityIndicator size={25} color={themeState === 'dark' ?
-                    "white" : "black"
-                } style={{
-                    marginBottom: 20
-                }} />
+                <LottieView
+                    source={require('../../Assets/Animations/spinner.json')}
+                    style={{ width: 30, height: 30, marginBottom: 10 }}
+                    autoPlay loop />
                 <TextRegular value={'Loading...'} />
             </View>
         </SafeAreaView>

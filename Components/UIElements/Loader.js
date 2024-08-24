@@ -1,26 +1,39 @@
+import { BlurView } from "expo-blur"
+import LottieView from "lottie-react-native"
 import { useEffect, useState } from "react"
-import { Appearance, View } from "react-native"
+import { Appearance, Dimensions, View } from "react-native"
 import Spinner from "react-native-loading-spinner-overlay"
-import { ActivityIndicator, Modal } from "react-native-paper"
+import { ActivityIndicator, Modal, Portal } from "react-native-paper"
 
-export const Loader = ({visible, white}) =>{
+export const Loader = ({ visible, white }) => {
     const [themeState, setThemeState] = useState(Appearance.getColorScheme())
 
-    useEffect(()=>{
-        Appearance.addChangeListener(()=>{
+    useEffect(() => {
+        Appearance.addChangeListener(() => {
             setThemeState(Appearance.getColorScheme())
         })
-    },[])
-    return(
-        <Modal visible={visible} style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            
-        }}>
-            <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-                <Spinner animation="fade" visible={visible} color={white? 'white' : themeState === 'dark'? 'white' : "black"}/>
-            </View>
-        </Modal>
+    }, [])
+    return (
+        <Portal>
+            <Modal visible={visible} style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+
+            }}>
+                <BlurView style={{
+                    flex: 1, justifyContent: 'center', alignItems: 'center',
+                    width: Dimensions.get('window').width,
+                    height: Dimensions.get('window').height
+                }}
+                    intensity={100} experimentalBlurMethod="dimezisBlurView">
+                    <LottieView
+                        source={require('../Assets/Animations/spinner.json')}
+                        style={{
+                            width: 35, height: 35
+                        }} autoPlay loop />
+                </BlurView>
+            </Modal>
+        </Portal>
     )
 }

@@ -289,19 +289,20 @@ export default Login = (props) => {
         <View style={[stylesheet.container, {
             justifyContent: 'space-between'
         }]}>
-            <View style={{width:'100%'}}>
+            <View style={{ width: '100%' }}>
                 <View style={{
                     marginTop: 25, paddingVertical: 10,
-                    marginStart: 20, width:'100%'
+                    marginStart: 20, width: '100%'
                 }}>
                     <BackButton props={props} />
                 </View>
 
             </View>
-            <ScrollView style={{ flex: 1,  }}
-            contentContainerStyle={{justifyContent: 'space-between',
-            }}
-            showsVerticalScrollIndicator={false}>
+            <ScrollView style={{ flex: 1, }}
+                contentContainerStyle={{
+                    justifyContent: 'space-between',
+                }}
+                showsVerticalScrollIndicator={false}>
                 <View>
                     <TextBold value={`Welcome`} fontSize={35}
                         fontWeight={"bold"} textAlign="left" flexStart
@@ -352,68 +353,79 @@ export default Login = (props) => {
                     }
                 </Stagger>
 
-                <View style={{ alignItems: 'center', marginBottom: 50 }}>
+                <View style={{ alignItems: 'center', marginBottom: 50, marginTop: createPassword ? 0 : 50 }}>
+                    <Stagger
+                        stagger={50}
+                        duration={2000}
+                        exitDirection={-1}
+                        entering={() => FadeInUp.springify()}
+                        exiting={() => FadeOutDown.springify()}
+                        style={{
+                            width: '100%', alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
 
-                    <Custombutton text={passwordVisible?
-                        'Sign In'
-                        :
-                        createPassword?
-                        'Create Account'
-                        :
-                        "Continue"
-                    } marginTop={20}
-                        onPress={() => {
-                            if (!passwordVisible && !createPassword) {
-                                CheckUser()
-                            } else if (passwordVisible) {
-                                SignInUser()
-                            } else if (createPassword) {
-                                CreateUser()
-                            }
-                        }} />
-                    <View style={{
-                        flexDirection: 'row', alignItems: 'center',
-                        marginTop: 20, marginBottom: 20
-                    }}>
-                        <Divider style={{
-                            width: 100,
-                            backgroundColor: 'gray'
-                        }} />
-                        <Text style={{ color: 'gray' }}>    OR    </Text>
-                        <Divider style={{
-                            width: 100,
-                            backgroundColor: 'gray'
-                        }} />
-                    </View>
-                    <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        width: '85%', marginBottom: 50
-                    }}>
-                        <GoogleButton />
-                        <CodeloomButton onPress={() => {
-                            props.navigation.navigate("Codeloom")
-                        }} />
-                    </View>
-                    <Text style={{
-                        fontFamily: 'Mulish-Regular',
-                        paddingHorizontal: 50, textAlign: 'center',
-                        color: themeState == 'dark' ? 'white' : 'black'
-                    }}>
-                        By tapping "Continue," I confirm that I agree to
-                    </Text>
-                    <TouchableOpacity onPress={() => {
-                        props.navigation.navigate("PrivacyPolicy")
-                    }}>
+                        <Custombutton text={passwordVisible ?
+                            'Sign In'
+                            :
+                            createPassword ?
+                                'Create Account'
+                                :
+                                "Continue"
+                        } marginTop={20}
+                            onPress={() => {
+                                if (!passwordVisible && !createPassword) {
+                                    CheckUser()
+                                } else if (passwordVisible) {
+                                    SignInUser()
+                                } else if (createPassword) {
+                                    CreateUser()
+                                }
+                            }} />
+                        <View style={{
+                            flexDirection: 'row', alignItems: 'center',
+                            marginTop: 10, marginBottom: 10
+                        }}>
+                            <Divider style={{
+                                width: 100,
+                                backgroundColor: 'gray'
+                            }} />
+                            <Text style={{ color: 'gray' }}>    OR    </Text>
+                            <Divider style={{
+                                width: 100,
+                                backgroundColor: 'gray'
+                            }} />
+                        </View>
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            width: Dimensions.get('window').width - 65, marginBottom: 50
+                        }}>
+                            <GoogleButton />
+                            <CodeloomButton onPress={() => {
+                                props.navigation.navigate("Codeloom")
+                            }} />
+                        </View>
                         <Text style={{
                             fontFamily: 'Mulish-Regular',
-                            paddingHorizontal: 50, textAlign: 'center',
-                            color: DarkColours.primary
+                            paddingHorizontal: 20, textAlign: 'center',
+                            color: themeState == 'dark' ? 'white' : 'black',
                         }}>
-                            Terms & Privacy Policy
+                            By tapping "Continue," I confirm that I agree to
                         </Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            props.navigation.navigate("PrivacyPolicy")
+                        }}>
+                            <Text style={{
+                                fontFamily: 'Mulish-Regular',
+                                paddingHorizontal: 50, textAlign: 'center',
+                                color: DarkColours.primary
+                            }}>
+                                Terms & Privacy Policy
+                            </Text>
+                        </TouchableOpacity>
+                    </Stagger>
                 </View>
             </ScrollView>
             <CustomSnackbar visible={snackVisible} label={snackLabel} message={snackMessage} onDismissSnackBar={onDismissSnackBar} />

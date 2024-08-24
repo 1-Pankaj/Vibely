@@ -199,8 +199,10 @@ const Codeloom = (props) => {
                 </View>
 
 
-                <ScrollView style={{}}
-                    contentContainerStyle={{ justifyContent: 'space-between', }}
+                <ScrollView style={{ height: '100%' }}
+                    contentContainerStyle={{
+                        justifyContent: 'center',
+                    }}
                     showsVerticalScrollIndicator={false}>
                     <View>
                         <TextBold value={`Experience`} fontSize={35}
@@ -219,9 +221,7 @@ const Codeloom = (props) => {
                         duration={1000}
                         exitDirection={-1}
                         entering={() => FadeInUp.springify()}
-                        exiting={() => FadeOutDown.springify()}
-                    >
-
+                        exiting={() => FadeOutDown.springify()}>
                         <CustomTextInput label={"Email or Phone"} marginTop={50}
                             icon="person" dark value={email} onChangeText={setEmail}
                             onBlur={CheckUser} error={emailError} />
@@ -248,66 +248,71 @@ const Codeloom = (props) => {
 
                     </Stagger>
 
-                    <View style={{ alignItems: 'center', marginBottom: 50 }}>
 
-                        <Custombutton text={passwordVisible ?
-                            'Sign In'
-                            :
-                            createPassword ?
-                                'Create Account'
+                    <View style={{ alignItems: 'center', marginBottom: 50, marginTop: createPassword ? 0 : 50 }}>
+                        <Stagger
+                            stagger={50}
+                            duration={2000}
+                            exitDirection={-1}
+                            entering={() => FadeInUp.springify()}
+                            exiting={() => FadeOutDown.springify()}
+                            style={{
+                                width: '100%', alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                            <Custombutton text={passwordVisible ?
+                                'Sign In'
                                 :
-                                "Continue"
-                        } marginTop={20}
-                            onPress={() => {
-                                if (!passwordVisible && !createPassword) {
-                                    CheckUser()
-                                } else if (passwordVisible) {
-                                    SignInUser()
-                                } else if (createPassword) {
-                                    CreateUser()
-                                }
-                            }} codeloom />
-                        <View style={{
-                            flexDirection: 'row', alignItems: 'center',
-                            marginTop: 20, marginBottom: 20
-                        }}>
-                            <Divider style={{
-                                width: 100,
-                                backgroundColor: 'gray'
-                            }} />
-                            <Text style={{ color: 'gray' }}>    OR    </Text>
-                            <Divider style={{
-                                width: 100,
-                                backgroundColor: 'gray'
-                            }} />
-                        </View>
-                        <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            width: '85%', marginBottom: 50
-                        }}>
+                                createPassword ?
+                                    'Create Account'
+                                    :
+                                    "Continue"
+                            } marginTop={20}
+                                onPress={() => {
+                                    if (!passwordVisible && !createPassword) {
+                                        CheckUser()
+                                    } else if (passwordVisible) {
+                                        SignInUser()
+                                    } else if (createPassword) {
+                                        CreateUser()
+                                    }
+                                }} codeloom />
+                            <View style={{
+                                flexDirection: 'row', alignItems: 'center',
+                                marginTop: 10, marginBottom: 10
+                            }}>
+                                <Divider style={{
+                                    width: 100,
+                                    backgroundColor: 'gray'
+                                }} />
+                                <Text style={{ color: 'gray' }}>    OR    </Text>
+                                <Divider style={{
+                                    width: 100,
+                                    backgroundColor: 'gray'
+                                }} />
+                            </View>
                             <GoogleButton full />
-
-                        </View>
-                        <Text style={{
-                            fontFamily: 'Mulish-Regular',
-                            paddingHorizontal: 50, textAlign: 'center',
-                            color: 'white'
-                        }}>
-                            By tapping "Continue," I confirm that I agree to
-                        </Text>
-                        <TouchableOpacity onPress={() => {
-                            props.navigation.navigate("PrivacyPolicy")
-                        }}>
                             <Text style={{
                                 fontFamily: 'Mulish-Regular',
-                                paddingHorizontal: 50, textAlign: 'center',
-                                color: DarkColours.codeloom
+                                paddingHorizontal: 20, textAlign: 'center',
+                                color: 'white', marginTop: 20
                             }}>
-                                Terms & Privacy Policy
+                                By tapping "Continue," I confirm that I agree to
                             </Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                props.navigation.navigate("PrivacyPolicy")
+                            }}>
+                                <Text style={{
+                                    fontFamily: 'Mulish-Regular',
+                                    paddingHorizontal: 50, textAlign: 'center',
+                                    color: DarkColours.codeloom
+                                }}>
+                                    Terms & Privacy Policy
+                                </Text>
+                            </TouchableOpacity>
+                        </Stagger>
+
+
                     </View>
                 </ScrollView>
             </ImageBackground>

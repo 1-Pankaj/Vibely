@@ -34,7 +34,7 @@ const GoogleButton = ({ text,
             borderRadius: 10, marginStart: marginStart,
             marginEnd: marginEnd, marginBottom: marginBottom,
             marginTop: marginTop, marginHorizontal: marginHorizontal,
-            marginVertical: marginVertical, width: full ? '100%' : '45%',
+            marginVertical: marginVertical, width: full ? Dimensions.get('window').width - 65 : '45%',
             paddingVertical: 20, backgroundColor: full ? DarkColours.secondary :
                 themeState === 'dark' ?
                     DarkColours.secondary : LightColours.secondary,
