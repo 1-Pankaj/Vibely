@@ -20,6 +20,10 @@ import Home from './Components/Screens/Dashboard/Home';
 import { auth } from './Config/firebase.config';
 import LoadingScreen from './Components/Screens/Loading';
 import { codeloomAuth } from './Config/codeloom.firebase.config';
+import HomePage from './Components/Screens/Dashboard/Pages/HomePage';
+import Search from './Components/Screens/Dashboard/Pages/Search';
+import Chats from './Components/Screens/Dashboard/Pages/Chats';
+import Settings from './Components/Screens/Dashboard/Pages/Settings';
 
 const Stack = createStackNavigator();
 
@@ -106,6 +110,10 @@ function App() {
         <Stack.Navigator screenOptions={{ headerShown: false, }} initialRouteName='LoadingScreen'>
           <Stack.Screen name='LoadingScreen' component={LoadingScreen} />
           <Stack.Screen name='Home' component={Home} />
+          <Stack.Screen name='HomePage' component={HomePage} />
+          <Stack.Screen name='Search' component={Search} />
+          <Stack.Screen name='Chats' component={Chats} />
+          <Stack.Screen name='Settings' component={Settings} />
           <Stack.Screen name="Onboarding" component={Onboarding} />
           <Stack.Screen name='PrivacyPolicy' component={PrivacyPolicy} options={{
             animationEnabled: true, animation: 'slide_from_bottom',

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../../Config/firebase.config';
 import { codeloomAuth } from '../../../Config/codeloom.firebase.config';
@@ -9,31 +8,36 @@ const useAuth = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Array to store unsubscribe functions
-        const unsubscribes = [];
+        let foundUser = false;
 
-        // Monitor auth state for both instances
-        unsubscribes.push(
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    setCurrentAuth(auth);
-                    setLoading(false);
-                }
-            })
-        );
+        const unsubscribeAuth1 = onAuthStateChanged(auth, (user) => {
+            if (user && !foundUser) {
+                setCurrentAuth(auth);
+                foundUser = true;
+                setLoading(false); // Set loading to false once user is found
+            }
+        });
 
-        unsubscribes.push(
-            onAuthStateChanged(codeloomAuth, (user) => {
-                if (user) {
-                    setCurrentAuth(codeloomAuth);
-                    setLoading(false);
-                }
-            })
-        );
+        const unsubscribeAuth2 = onAuthStateChanged(codeloomAuth, (user) => {
+            if (user && !foundUser) {
+                setCurrentAuth(codeloomAuth);
+                foundUser = true;
+                setLoading(false); // Set loading to false once user is found
+            }
+        });
+
+        // If no user is found, ensure loading is set to false eventually
+        const timeoutId = setTimeout(() => {
+            if (!foundUser) {
+                setLoading(false);
+            }
+        }, 2000); // Adjust timeout as needed
 
         // Cleanup function to unsubscribe on component unmount
         return () => {
-            unsubscribes.forEach((unsubscribe) => unsubscribe());
+            unsubscribeAuth1();
+            unsubscribeAuth2();
+            clearTimeout(timeoutId);
         };
     }, []);
 

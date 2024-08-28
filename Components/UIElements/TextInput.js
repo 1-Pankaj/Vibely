@@ -59,6 +59,7 @@ export const CustomTextInput = ({
       } />
       <TextInput
         error={error}
+        autoCapitalize={password ? "none" : 'sentences'}
         placeholder={label}
         placeholderTextColor={themeState === 'dark' ? '#414141' : 'darkgray'}
         cursorColor={'gray'}

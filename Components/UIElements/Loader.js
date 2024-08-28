@@ -26,7 +26,11 @@ export const Loader = ({ visible, white }) => {
                     width: Dimensions.get('window').width,
                     height: Dimensions.get('window').height
                 }}
-                    intensity={100} experimentalBlurMethod="dimezisBlurView">
+                tint={themeState === 'dark'? "systemChromeMaterialDark"
+                    :
+                    'systemChromeMaterialLight'
+                }
+                    intensity={20} experimentalBlurMethod="dimezisBlurView">
                     <LottieView
                         source={require('../Assets/Animations/spinner.json')}
                         style={{
