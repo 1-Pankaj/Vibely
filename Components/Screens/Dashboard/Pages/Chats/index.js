@@ -3,6 +3,7 @@ import stylesheet from "../../../../UIElements/StyleSheet";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "react-native-paper";
 import { useRef } from "react";
+import Header from "../../../../UIElements/CommonElements/Header";
 
 const Chats = () => {
 
@@ -10,9 +11,7 @@ const Chats = () => {
 
     const RenderDummyData = () => {
         return (
-            <ScrollView onScroll={(event) => {
-                
-            }}>
+            <View style={{marginTop:50}}>
                 {
                     Array(10).fill(0).map((item, index) => {
                         return (
@@ -34,7 +33,7 @@ const Chats = () => {
                         )
                     })
                 }
-            </ScrollView>
+            </View>
         );
     }
 

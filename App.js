@@ -1,7 +1,7 @@
 // In App.js in a new project
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, Appearance } from 'react-native';
+import { View, Text, Appearance, Platform, UIManager } from 'react-native';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { MD3DarkTheme, MD3LightTheme, PaperProvider, useTheme } from 'react-native-paper';
 import Onboarding from './Components/Screens/Onboarding';
@@ -91,6 +91,12 @@ function App() {
   const mergedLightTheme = merge(lightThemePaper, lightThemeStack)
   const mergedDarkTheme = merge(darkThemePaper, darkThemeStack)
 
+  if (
+    Platform.OS === 'android' &&
+    UIManager.setLayoutAnimationEnabledExperimental
+  ) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
 
   useEffect(() => {
     if (loaded || error) {

@@ -7,8 +7,9 @@ import HomePage from "../Pages/HomePage";
 import Chats from "../Pages/Chats";
 import Search from "../Pages/Search";
 import Settings from "../Pages/Settings";
+import Header from "../../../UIElements/CommonElements/Header";
 
-const Home = () => {
+const Home = (props) => {
     const [currentTab, setCurrentTab] = useState('home');
     const [visibleNavbar, setVisibleNavbar] = useState(true);
 
@@ -21,7 +22,7 @@ const Home = () => {
             case 'chat':
                 return <Chats />;
             case 'settings':
-                return <Settings />;
+                return <Settings props={props} />;
             default:
                 return <HomePage />;
         }
@@ -29,6 +30,7 @@ const Home = () => {
 
     return (
         <SafeAreaView style={stylesheet.container}>
+            <Header name={currentTab}/>
             <ScrollView style={{ flex: 1 }}
                 onScroll={(tx) => {
                     if (tx.nativeEvent.velocity.y > 1) {
@@ -37,10 +39,10 @@ const Home = () => {
                         setVisibleNavbar(true);
                     }
                 }}
-            >
+                showsVerticalScrollIndicator={false}>
                 <Animated.View
-                    entering={FadeIn.duration(300)}
-                    exiting={FadeOut.duration(300)}
+                    entering={FadeIn.duration(200)}
+                    exiting={FadeOut.duration(200)}
                     style={{ flex: 1 }}
                 >
                     {renderPage()}
