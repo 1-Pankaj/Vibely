@@ -4,6 +4,7 @@ import { Appearance, Dimensions, View } from "react-native"
 import { Button, Portal, Text } from "react-native-paper"
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
 import { SafeAreaView } from "react-native-safe-area-context"
+import TextRegular from "../TextRegular"
 
 export default Header = ({ name, visible }) => {
 
@@ -38,10 +39,9 @@ export default Header = ({ name, visible }) => {
                     visible && (
                         <Animated.View
                         entering={FadeIn.duration(200)}
-                        exiting={FadeOut.duration(200)}>
-                            <Text style={{
-                                color: 'white'
-                            }}>{name}</Text>
+                        exiting={FadeOut.duration(200)}
+                        style={{flex:1,alignItems:'center'}}>
+                            <TextRegular value={name == 'chat'? 'Chats' : name} bold marginTop={10}/>
                         </Animated.View>
                     )
                 }
