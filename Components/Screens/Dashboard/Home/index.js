@@ -13,6 +13,8 @@ const Home = (props) => {
     const [currentTab, setCurrentTab] = useState('home');
     const [visibleNavbar, setVisibleNavbar] = useState(true);
 
+    const [visibleTitle, setVisibleTitle] = useState(true)
+
     const renderPage = () => {
         switch (currentTab) {
             case 'home':
@@ -30,13 +32,19 @@ const Home = (props) => {
 
     return (
         <SafeAreaView style={stylesheet.container}>
-            <Header name={currentTab}/>
+            <Header name={currentTab} visible={visibleTitle}/>
             <ScrollView style={{ flex: 1 }}
                 onScroll={(tx) => {
                     if (tx.nativeEvent.velocity.y > 1) {
                         setVisibleNavbar(false);
                     } else if (tx.nativeEvent.velocity.y < -1) {
                         setVisibleNavbar(true);
+                    }
+
+                    if(tx.nativeEvent.contentOffset.y > 100){
+                        setVisibleTitle(true)
+                    }else if(tx.nativeEvent.contentOffset.y < 100){
+                        setVisibleTitle(false)
                     }
                 }}
                 showsVerticalScrollIndicator={false}>
