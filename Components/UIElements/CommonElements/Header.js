@@ -2,6 +2,7 @@ import { BlurView } from "expo-blur"
 import { useEffect, useState } from "react"
 import { Appearance, Dimensions, View } from "react-native"
 import { Button, Portal, Text } from "react-native-paper"
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 export default Header = ({ name, visible }) => {
@@ -10,9 +11,9 @@ export default Header = ({ name, visible }) => {
 
     const [visibleTitle, setVisibleTitle] = useState(visible)
 
-    useEffect(()=>{
+    useEffect(() => {
         setVisibleTitle(visible)
-    },[visible])
+    }, [visible])
 
     useEffect(() => {
         Appearance.addChangeListener(() => {
@@ -35,9 +36,13 @@ export default Header = ({ name, visible }) => {
             <SafeAreaView style={{ width: '100%', height: '100%' }}>
                 {
                     visible && (
-                        <Text style={{
-                            color:'white'
-                        }}>{name}</Text>
+                        <Animated.View
+                        entering={FadeIn.duration(200)}
+                        exiting={FadeOut.duration(200)}>
+                            <Text style={{
+                                color: 'white'
+                            }}>{name}</Text>
+                        </Animated.View>
                     )
                 }
             </SafeAreaView>

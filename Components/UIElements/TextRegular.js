@@ -15,7 +15,8 @@ const TextRegular = ({ value,
     flexStart,
     paddingHorizontal,
     textAlign,
-    primary
+    primary,
+    fontSize
 }) => {
 
     const [themeState, setThemeState] = useState(Appearance.getColorScheme())
@@ -26,7 +27,7 @@ const TextRegular = ({ value,
 
     return (
         <Text style={{
-            fontSize: bold ? 18 : 16,
+            fontSize: fontSize? fontSize : bold ? 18 : 16,
             fontFamily: bold ? 'Mulish-SemiBold' : 'Mulish-Regular',
             fontWeight: 'regular',
             color: primary ? DarkColours.primary : inverted ? 'white' : themeState === 'dark' ? 'white' : 'black',

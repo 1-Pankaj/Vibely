@@ -1,34 +1,49 @@
-import { Dimensions, ScrollView, View } from "react-native";
+import { Dimensions, Image, ScrollView, View } from "react-native";
 import stylesheet from "../../../../UIElements/StyleSheet";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "react-native-paper";
 import { useRef } from "react";
 import Header from "../../../../UIElements/CommonElements/Header";
+import TextRegular from "../../../../UIElements/TextRegular";
+import TextBold from "../../../../UIElements/TextBold";
+import DarkColours from "../../../../Themes/DarkColours";
 
 const Chats = () => {
 
-    
 
-    const RenderDummyData = () => {
+
+    const RenderChatList = () => {
         return (
-            <View style={{marginTop:50}}>
+            <View style={{ marginTop: 50 }}>
                 {
-                    Array(10).fill(0).map((item, index) => {
+                    Array(15).fill(0).map((item, index) => {
                         return (
                             <View key={index} style={{
-                                width: Dimensions.get('window').width - 30,
-                                height: 100, marginVertical: 20,
-                                backgroundColor: 'gray',
-                                alignItems: 'center', justifyContent: 'center',
-                                borderRadius: 20
+                                alignItems: 'center',
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                width: Dimensions.get('window').width
+                                , height: 85,
+                                borderBottomWidth: 0.5,
+                                borderBottomColor: 'gray', gap: 20
                             }}>
-                                <Text style={{
-                                    fontWeight: 'bold',
-                                    color: 'white',
-                                    fontSize: 24
+                                <Image source={{ uri: 'https://preview.keenthemes.com/metronic-v4/theme_rtl/assets/pages/media/profile/profile_user.jpg' }}
+                                    style={{ width: 60, height: 60, borderRadius: 30 }} />
+                                <View style={{ gap: 10 }}>
+                                    <TextRegular value={"User"} bold flexStart />
+                                    <TextRegular value={"This is an example message."} flexStart />
+                                </View>
+                                <View style={{alignItems:'flex-end',
+                                    gap:10
                                 }}>
-                                    Dummy Data
-                                </Text>
+                                    <TextRegular value={"12:00"} flexEnd fontSize={12} />
+                                    <View style={{width:20, height:20, borderRadius:10,
+                                        backgroundColor:DarkColours.primary, alignItems:'center',
+                                        justifyContent:'center'
+                                    }}>
+                                        <TextRegular value={1} fontSize={12} />
+                                    </View>
+                                </View>
                             </View>
                         )
                     })
@@ -39,7 +54,9 @@ const Chats = () => {
 
     return (
         <SafeAreaView style={[stylesheet.container]}>
-            <RenderDummyData />
+            <TextBold value={"Chats"} marginTop={50}
+                fontSize={30} flexStart marginStart={20} />
+            <RenderChatList />
         </SafeAreaView>
     );
 }
