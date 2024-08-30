@@ -86,11 +86,18 @@ const Home = (props) => {
                     alignItems: 'flex-end'
                 }}>
                 <AnimatedFAB
-                    icon={'plus'}
-                    label={'Add Chats'}
+                    icon={currentTab === 'chat'?
+                        'plus' : 'heart-plus-outline'
+                    }
+                    label={
+                        currentTab == 'chat'? 'Add Chats' : 
+                        "Add Media"
+                    }
                     color="white"
                     extended={visibleNavbar}
-                    visible
+                    visible={currentTab == 'settings'? false : 
+                        currentTab === 'search'? false : true
+                    }
                     onPress={() => { }}
                     rippleColor={'white'}
                     animateFrom={'right'}
