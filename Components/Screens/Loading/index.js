@@ -17,27 +17,27 @@ const LoadingScreen = (props) => {
         return RandomLoaderText[randomIndex];
     }
 
-    const [themeState, setThemeState] = useState(Appearance.getColorScheme());
     const { currentAuth: user, loading } = useAuth();
 
-    useEffect(() => {
-        Appearance.addChangeListener(() => {
-            setThemeState(Appearance.getColorScheme());
-        });
-    }, []);
 
     const [randomText, setRandomText] = useState(getRandomLoaderText());
 
     useEffect(() => {
         if (!loading) {
             if (user) {
-                if (user.currentUser.displayName) {
-                    setTimeout(() => {
-                        props.navigation.replace('Home');
-                    }, 1500);
+                if (user.currentUser) {
+                    if (user.currentUser.displayName) {
+                        setTimeout(() => {
+                            props.navigation.replace('Home');
+                        }, 1500);
+                    } else {
+                        setTimeout(() => {
+                            props.navigation.replace('Registration');
+                        }, 1500);
+                    }
                 } else {
                     setTimeout(() => {
-                        props.navigation.replace('Registration');
+                        props.navigation.replace('Onboarding');
                     }, 1500);
                 }
             } else {

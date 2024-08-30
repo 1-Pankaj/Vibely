@@ -52,6 +52,11 @@ const Home = (props) => {
         <SafeAreaView style={stylesheet.container}>
             <Header name={currentTab} visible={visibleTitle} />
             <ScrollView style={{ flex: 1 }}
+                onScrollEndDrag={(tx) => {
+                    if (tx.nativeEvent.contentOffset.y < 50) {
+                        setVisibleNavbar(true)
+                    }
+                }}
                 onScroll={(tx) => {
                     if (tx.nativeEvent.velocity.y > 0.2) {
                         setVisibleNavbar(false);
@@ -86,7 +91,7 @@ const Home = (props) => {
                     color="white"
                     extended={visibleNavbar}
                     visible
-                    onPress={()=>{}}
+                    onPress={() => { }}
                     rippleColor={'white'}
                     animateFrom={'right'}
                     iconMode={'dynamic'}

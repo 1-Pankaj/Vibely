@@ -17,13 +17,12 @@ import Login from './Components/Screens/Auth/Login';
 import Codeloom from './Components/Screens/Codeloom';
 import Registration from './Components/Screens/Auth/Registration';
 import Home from './Components/Screens/Dashboard/Home';
-import { auth } from './Config/firebase.config';
 import LoadingScreen from './Components/Screens/Loading';
-import { codeloomAuth } from './Config/codeloom.firebase.config';
 import HomePage from './Components/Screens/Dashboard/Pages/HomePage';
 import Search from './Components/Screens/Dashboard/Pages/Search';
 import Chats from './Components/Screens/Dashboard/Pages/Chats';
 import Settings from './Components/Screens/Dashboard/Pages/Settings';
+import useAuth from './Components/Hooks/useAuth';
 
 const Stack = createStackNavigator();
 
@@ -31,6 +30,7 @@ function App() {
 
   const [themeState, setThemeState] = useState(Appearance.getColorScheme())
 
+  const [authStack, setAuthStack] = useState(false)
 
   const [loaded, error] = useFonts({
     'Mulish-Variable': require('./Components/Assets/Fonts/Mulish-Variable.ttf'),
@@ -39,6 +39,8 @@ function App() {
     'Mulish-SemiBold': require('./Components/Assets/Fonts/Mulish-SemiBold.ttf'),
     'Mulish-Medium': require('./Components/Assets/Fonts/Mulish-Medium.ttf'),
   });
+
+  const { user, loading } = useAuth();
 
 
   Appearance.addChangeListener(() => {
@@ -97,6 +99,16 @@ function App() {
   ) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
+
+  useEffect(() => {
+    if (!loading) {
+      if (user) {
+        setAuthStack(false)
+      } else {
+        setAuthStack(true)
+      }
+    }
+  }, [user, loading])
 
   useEffect(() => {
     if (loaded || error) {
