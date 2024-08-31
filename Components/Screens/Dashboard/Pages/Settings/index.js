@@ -9,6 +9,7 @@ import Search from "../../../../UIElements/CommonElements/Search"
 import TextRegular from "../../../../UIElements/TextRegular"
 import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons"
 import { Loader } from "../../../../UIElements/Loader"
+import { DialogCustom } from "../../../../UIElements/CommonElements/Dialog"
 
 const Settings = ({ props }) => {
 
@@ -19,6 +20,26 @@ const Settings = ({ props }) => {
             setThemeState(Appearance.getColorScheme())
         })
     }, [])
+
+    const [dialogVisible, setDialogVisible] = useState(false)
+    const [dialogMessage, setDialogMessage] = useState("")
+    const [dialogTitle, setDialogTitle] = useState("")
+    const [dialogButton, setDialogButton] = useState("")
+
+    const showLogoutDialog = () => {
+
+    }
+
+    const handleLogout = async () => {
+        setLoader(true)
+        await authState.signOut()
+        setLoader(false)
+        props.navigation.reset(
+            {
+                index: 0,
+                routes: [{ name: 'LoadingScreen' }]
+            })
+    }
 
     const [loader, setLoader] = useState(false)
 
@@ -194,15 +215,8 @@ const Settings = ({ props }) => {
                 borderRadius: 10
             }}>
 
-                <TouchableOpacity activeOpacity={0.4} onPress={async () => {
-                    setLoader(true)
-                    await authState.signOut()
-                    setLoader(false)
-                    props.navigation.reset(
-                        {
-                            index: 0,
-                            routes: [{ name: 'LoadingScreen' }]
-                        })
+                <TouchableOpacity activeOpacity={0.4} onPress={() => {
+                    setDialogVisible(true)
                 }}>
                     <View style={{
                         flexDirection: 'row',
@@ -216,9 +230,14 @@ const Settings = ({ props }) => {
                     </View>
                 </TouchableOpacity>
             </View>
+            <DialogCustom button={dialogButton}
+                hideDialog={() => { setDialogVisible(false) }}
+                message={dialogMessage}
+                onSubmit={handleLogout}
+                title={dialogTitle}
+                visible={dialogVisible} />
 
-
-            <Loader  visible={loader} />
+            <Loader visible={loader} />
         </View>
     )
 }

@@ -142,7 +142,7 @@ const Home = (props) => {
                         'plus' : 'heart-plus-outline'
                     }
                     label={
-                        currentTab == 'chat' ? 'Add Chats' :
+                        currentTab == 'chat' ? 'Add Chat' :
                             "Add Media"
                     }
                     color="white"
