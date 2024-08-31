@@ -16,7 +16,9 @@ const TextRegular = ({ value,
     paddingHorizontal,
     textAlign,
     primary,
-    fontSize
+    fontSize,
+    light,
+    red
 }) => {
 
     const [themeState, setThemeState] = useState(Appearance.getColorScheme())
@@ -30,7 +32,8 @@ const TextRegular = ({ value,
             fontSize: fontSize? fontSize : bold ? 18 : 16,
             fontFamily: bold ? 'Mulish-SemiBold' : 'Mulish-Regular',
             fontWeight: 'regular',
-            color: primary ? DarkColours.primary : inverted ? 'white' : themeState === 'dark' ? 'white' : 'black',
+            color: red? 'red' :
+            light? themeState === 'dark'? 'lightgray' : 'gray' : primary ? DarkColours.primary : inverted ? 'white' : themeState === 'dark' ? 'white' : 'black',
             marginStart: marginStart,
             marginEnd: marginEnd, marginBottom: marginBottom,
             marginTop: marginTop, marginHorizontal: marginHorizontal,

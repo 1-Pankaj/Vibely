@@ -7,6 +7,7 @@ import Header from "../../../../UIElements/CommonElements/Header";
 import TextRegular from "../../../../UIElements/TextRegular";
 import TextBold from "../../../../UIElements/TextBold";
 import DarkColours from "../../../../Themes/DarkColours";
+import Search from "../../../../UIElements/CommonElements/Search";
 
 const Chats = () => {
 
@@ -18,9 +19,10 @@ const Chats = () => {
         })
     }, [])
 
+
     const RenderChatList = () => {
         return (
-            <View style={{ marginTop: 20 }}>
+            <View>
                 {
                     Array(15).fill(0).map((item, index) => {
                         return (
@@ -61,13 +63,9 @@ const Chats = () => {
     }
 
     return (
-        <SafeAreaView style={[stylesheet.container]}>
-            <View style={{ width: Dimensions.get('window').width }}>
-                <TextBold value={"Chats"} marginTop={50}
-                    fontSize={30} flexStart marginStart={20} />
-                <RenderChatList />
-            </View>
-        </SafeAreaView>
+        <View style={[stylesheet.container]}>
+            <RenderChatList/>
+        </View>
     );
 }
 
