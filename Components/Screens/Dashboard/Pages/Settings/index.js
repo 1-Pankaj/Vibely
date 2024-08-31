@@ -10,6 +10,7 @@ import TextRegular from "../../../../UIElements/TextRegular"
 import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons"
 import { Loader } from "../../../../UIElements/Loader"
 import { DialogCustom } from "../../../../UIElements/CommonElements/Dialog"
+import DarkColours from "../../../../Themes/DarkColours"
 
 const Settings = ({ props }) => {
 
@@ -31,6 +32,7 @@ const Settings = ({ props }) => {
     }
 
     const handleLogout = async () => {
+        setDialogVisible(false)
         setLoader(true)
         await authState.signOut()
         setLoader(false)
@@ -65,7 +67,7 @@ const Settings = ({ props }) => {
                 width: Dimensions.get('window').width - 30,
                 paddingVertical: 10, paddingHorizontal: 20,
                 backgroundColor: themeState === 'dark' ?
-                    '#414141' : '#f0f0f0', marginTop: 20,
+                    '#212121' : '#f0f0f0', marginTop: 20,
                 borderRadius: 10
             }}>
                 <TouchableOpacity activeOpacity={0.4}>
@@ -118,7 +120,7 @@ const Settings = ({ props }) => {
                 width: Dimensions.get('window').width - 30,
                 paddingVertical: 10, paddingHorizontal: 20,
                 backgroundColor: themeState === 'dark' ?
-                    '#414141' : '#f0f0f0', marginTop: 30,
+                    '#212121' : '#f0f0f0', marginTop: 30,
                 borderRadius: 10
             }}>
 
@@ -211,12 +213,15 @@ const Settings = ({ props }) => {
                 width: Dimensions.get('window').width - 30,
                 paddingVertical: 10, paddingHorizontal: 20,
                 backgroundColor: themeState === 'dark' ?
-                    '#414141' : '#f0f0f0', marginTop: 20,
+                    '#212121' : '#f0f0f0', marginTop: 20,
                 borderRadius: 10
             }}>
 
                 <TouchableOpacity activeOpacity={0.4} onPress={() => {
                     setDialogVisible(true)
+                    setDialogButton("Logout")
+                    setDialogTitle("LogOut")
+                    setDialogMessage("Are you sure you want to logout?")
                 }}>
                     <View style={{
                         flexDirection: 'row',

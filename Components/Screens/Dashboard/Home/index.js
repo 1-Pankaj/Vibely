@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Animated as BaseAnimated, Easing, View, Dimensions, TextInput, Appearance } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { SafeAreaView, ScrollView, StyleSheet, Animated as BaseAnimated, Easing, View, Dimensions, TextInput, Appearance, Image } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import stylesheet from "../../../UIElements/StyleSheet";
 import { BottomNav } from "../../../UIElements/BottomNav";
@@ -60,7 +60,23 @@ const Home = (props) => {
         }
     };
 
-    
+    const lastScrollY = useRef(0);
+    const isScrollingDown = useRef(false);
+
+    const handleScroll = (event) => {
+        const currentScrollY = event.nativeEvent.contentOffset.y;
+        const scrollDifference = currentScrollY - lastScrollY.current;
+
+        if (scrollDifference > 10) {
+            setVisibleNavbar(false);
+            isScrollingDown.current = true;
+        } else if (scrollDifference < -10) {
+            setVisibleNavbar(true);
+            isScrollingDown.current = false;
+        }
+
+        lastScrollY.current = currentScrollY;
+    };
 
     return (
         <SafeAreaView style={stylesheet.container}>
@@ -69,15 +85,12 @@ const Home = (props) => {
             <ScrollView style={{ flex: 1 }}
                 onScrollEndDrag={(tx) => {
                     if (tx.nativeEvent.contentOffset.y < 50) {
-                        setVisibleNavbar(true)
+                        setVisibleNavbar(true);
+                        isScrollingDown.current = false;
                     }
                 }}
                 onScroll={(tx) => {
-                    if (tx.nativeEvent.velocity.y > 0.2) {
-                        setVisibleNavbar(false);
-                    } else if (tx.nativeEvent.velocity.y < -0.2) {
-                        setVisibleNavbar(true);
-                    }
+                    handleScroll(tx);
 
                     if (tx.nativeEvent.contentOffset.y > 50) {
                         setVisibleTitle(true)
@@ -96,22 +109,33 @@ const Home = (props) => {
                     entering={FadeIn.duration(200)}
                     exiting={FadeOut.duration(200)}
                     style={{ flex: 1, width: Dimensions.get('window').width }}>
-                    <TextBold value={currentTab == 'chat' ?
-                        'Chats' :
-                        currentTab == 'search' ?
-                            'Search' :
-                            currentTab == 'settings' ?
-                                'Settings' :
-                                'Home'
-                    } marginTop={100}
-                        fontSize={30} flexStart marginStart={20} />
+                    {
+                        currentTab === 'home' ?
+                            <Image source={
+                                themeState === 'dark'?
+                                require("../../../Assets/Night/icontext-active-dark.png")
+                                :
+                                require("../../../Assets/Day/icontext-active-light.png")
+                            } style={{width:85, height:33.02,
+                                marginTop:110, marginStart:20
+                            }}/>    
+                        : <TextBold value={currentTab == 'chat' ?
+                                'Chats' :
+                                currentTab == 'search' ?
+                                    'Search' :
+                                    currentTab == 'settings' ?
+                                        'Settings' :
+                                        'Home'
+                            } marginTop={100}
+                                fontSize={30} flexStart marginStart={20} />
+                    }
                     <ExpandableSection expanded={
-                        currentTab === 'home'? false : visibleSearch
+                        currentTab === 'home' ? false : visibleSearch
                     } >
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between', padding: 10, backgroundColor:
-                                themeState === 'dark' ? '#414141' : '#f0f0f0',
+                                themeState === 'dark' ? '#212121' : '#f0f0f0',
                             width: Dimensions.get('window').width - 30, height: 40,
                             borderRadius: 8, paddingHorizontal: 20, gap: 12,
                             alignItems: 'center', alignSelf: 'center',
