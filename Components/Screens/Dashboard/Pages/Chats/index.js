@@ -33,11 +33,11 @@ const Chats = () => {
                                 width: Dimensions.get('window').width
                                 , height: 85,
                                 borderBottomWidth: 0.5,
-                                borderBottomColor: 'gray', gap: 20
+                                borderBottomColor: 'gray',
                             }}>
                                 <Image source={{ uri: 'https://preview.keenthemes.com/metronic-v4/theme_rtl/assets/pages/media/profile/profile_user.jpg' }}
                                     style={{ width: 60, height: 60, borderRadius: 30 }} />
-                                <View style={{ gap: 10 }}>
+                                <View style={{ gap: 10, flex:0.8 }}>
                                     <TextRegular value={"User"} bold flexStart />
                                     <TextRegular value={"This is an example message."} flexStart />
                                 </View>

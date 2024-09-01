@@ -16,7 +16,7 @@ import { ExpandableSection } from "react-native-ui-lib";
 import { Ionicons } from "@expo/vector-icons";
 
 const Home = (props) => {
-    const [currentTab, setCurrentTab] = useState('home');
+    const [currentTab, setCurrentTab] = useState('chat');
     const [visibleNavbar, setVisibleNavbar] = useState(true);
 
     const [visibleTitle, setVisibleTitle] = useState(false)
@@ -112,14 +112,15 @@ const Home = (props) => {
                     {
                         currentTab === 'home' ?
                             <Image source={
-                                themeState === 'dark'?
-                                require("../../../Assets/Night/icontext-active-dark.png")
-                                :
-                                require("../../../Assets/Day/icontext-active-light.png")
-                            } style={{width:85, height:33.02,
-                                marginTop:110, marginStart:20
-                            }}/>    
-                        : <TextBold value={currentTab == 'chat' ?
+                                themeState === 'dark' ?
+                                    require("../../../Assets/Night/icontext-active-dark.png")
+                                    :
+                                    require("../../../Assets/Day/icontext-active-light.png")
+                            } style={{
+                                width: 85, height: 33.02,
+                                marginTop: 110, marginStart: 20
+                            }} />
+                            : <TextBold value={currentTab == 'chat' ?
                                 'Chats' :
                                 currentTab == 'search' ?
                                     'Search' :
@@ -174,7 +175,13 @@ const Home = (props) => {
                     visible={currentTab == 'settings' ? false :
                         currentTab === 'search' ? false : true
                     }
-                    onPress={() => { }}
+                    onPress={() => {
+                        if (currentTab === 'chat') {
+                            setVisibleNavbar(false)
+                            animateFab()
+                            props.navigation.navigate('AddChat');
+                        }
+                    }}
                     rippleColor={'white'}
                     animateFrom={'right'}
                     iconMode={'dynamic'}

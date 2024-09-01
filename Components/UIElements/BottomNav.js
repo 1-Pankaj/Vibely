@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 export const BottomNav = ({ onTabChange, visible }) => {
     const [themeState, setThemeState] = useState(Appearance.getColorScheme());
-    const [selectedTab, setSelectedTab] = useState('home');
+    const [selectedTab, setSelectedTab] = useState('chat');
 
     const animatedPosition = useState(new Animated.Value(0))[0]
 

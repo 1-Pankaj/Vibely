@@ -23,6 +23,7 @@ import Search from './Components/Screens/Dashboard/Pages/Search';
 import Chats from './Components/Screens/Dashboard/Pages/Chats';
 import Settings from './Components/Screens/Dashboard/Pages/Settings';
 import useAuth from './Components/Hooks/useAuth';
+import AddChat from './Components/Screens/Dashboard/Pages/Chats/AddChat';
 
 const Stack = createStackNavigator();
 
@@ -131,6 +132,12 @@ function App() {
           <Stack.Screen name='HomePage' component={HomePage} />
           <Stack.Screen name='Search' component={Search} />
           <Stack.Screen name='Chats' component={Chats} />
+          <Stack.Screen name='AddChat' component={AddChat} options={{
+            animationEnabled: true, animation: 'slide_from_bottom',
+            gestureEnabled: true,
+            presentation: 'modal',
+            ...(TransitionPresets.ModalPresentationIOS)
+          }} />
           <Stack.Screen name='Settings' component={Settings} />
           <Stack.Screen name="Onboarding" component={Onboarding} />
           <Stack.Screen name='PrivacyPolicy' component={PrivacyPolicy} options={{
