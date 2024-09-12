@@ -26,9 +26,15 @@
     "plugins": [
       "expo-font",
       [
-      "expo-image-picker",
+        "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you use them in Vibely."
+        }
+      ],
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow Vibely to access your contacts."
         }
       ]
     ]
