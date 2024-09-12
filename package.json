@@ -41,7 +41,8 @@
     "react-native-svg": "15.2.0",
     "react-native-svg-transformer": "^1.4.0",
     "react-native-ui-lib": "^7.29.1",
-    "react-native-webview": "13.8.6"
+    "react-native-webview": "13.8.6",
+    "expo-contacts": "~13.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
