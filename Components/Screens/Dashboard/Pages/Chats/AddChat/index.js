@@ -1,4 +1,4 @@
-import { Animated, Appearance, Dimensions, TextInput, TouchableOpacity, View } from "react-native"
+import { Animated, Appearance, Dimensions, Linking, TextInput, TouchableOpacity, View } from "react-native"
 import { BackButton } from "../../../../../UIElements/Back"
 import stylesheet from "../../../../../UIElements/StyleSheet"
 import { ExpandableSection } from "react-native-ui-lib"
@@ -9,11 +9,12 @@ import { Text } from "react-native-paper"
 import TouchableScale from "@jonny/touchable-scale"
 import DarkColours from "../../../../../Themes/DarkColours"
 import LightColours from "../../../../../Themes/LightColours"
-import { LottieView } from 'lottie-react-native'
+import LottieView from "lottie-react-native";
 
 import * as Contacts from 'expo-contacts'
 import { chatImageColours } from "../ChatImageColours/imageColours"
 import TextBold from "../../../../../UIElements/TextBold"
+import Custombutton from "../../../../../UIElements/Button"
 
 export default AddChat = (props) => {
 
@@ -41,6 +42,7 @@ export default AddChat = (props) => {
                     fields: [Contacts.Fields.Emails],
                 });
                 setContact(data)
+                
             } else {
                 setPermissionStatus(false)
             }
@@ -88,7 +90,7 @@ export default AddChat = (props) => {
                 }}>
                     <BackButton props={props} />
                 </View>
-                {/* Dimensions.get('window').width - 30 */}
+                
                 <Animated.View style={{
                     width: Dimensions.get('window').width - 30,
                     alignSelf: 'center',
@@ -143,13 +145,15 @@ export default AddChat = (props) => {
                     flexDirection: 'row', alignItems: 'center',
                     justifyContent: 'space-between', alignSelf: 'center'
                 }}>
-                    <TouchableScale style={{ width: '46%' }}>
+                    <TouchableScale style={{ width: '46%' }} onPress={()=>{
+                        props.navigation.navigate("CreateContact")
+                    }}>
                         <View style={{
                             marginTop: 20, width: '100%', height: 55,
                             backgroundColor: themeState === 'dark' ? '#212121' : '#f0f0f0',
                             borderRadius: 10, flexDirection: 'row',
                             alignItems: 'center', justifyContent: 'center'
-                        }}>
+                        }} >
                             <View style={{
                                 width: 40, height: 40, backgroundColor:
                                     themeState === 'dark' ? '#414141' : 'lightgray',
@@ -195,7 +199,7 @@ export default AddChat = (props) => {
                                 {
                                     contact?.map((item, index) => {
                                         return (
-                                            <View style={{
+                                            <TouchableScale style={{
                                                 marginTop: 10,
                                                 backgroundColor: themeState === 'dark' ? '#212121' : '#f0f0f0',
                                                 width: '100%', height: 60,
@@ -222,14 +226,27 @@ export default AddChat = (props) => {
                                                 }}>
                                                     <TextBold value={item.name} fontSize={18} />
                                                 </View>
-                                            </View>
+                                            </TouchableScale>
                                         )
                                     })
                                 }
                             </View>
                             :
                             <View style={{ width: '100%' }}>
-                                
+                                <LottieView source={require('../../../../../Assets/Animations/nocontacts.json')}
+                                    autoPlay style={{
+                                        width: '100%', height: Dimensions.get('window').height / 2.5,
+                                        alignSelf: 'center'
+                                    }}
+                                    loop />
+                                <TextBold value={"Sorry, we don't have access to your contacts"}
+                                    fontSize={20} />
+                                <View style={{alignSelf:'center', marginTop:50}}>
+                                    <Custombutton text={"Please allow access"} 
+                                    onPress={()=>{
+                                        Linking.openSettings()
+                                    }}/>
+                                </View>
                             </View>
                     }
                 </View>
