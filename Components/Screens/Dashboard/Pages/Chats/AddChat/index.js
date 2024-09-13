@@ -9,6 +9,7 @@ import { Text } from "react-native-paper"
 import TouchableScale from "@jonny/touchable-scale"
 import DarkColours from "../../../../../Themes/DarkColours"
 import LightColours from "../../../../../Themes/LightColours"
+import { LottieView } from 'lottie-react-native'
 
 import * as Contacts from 'expo-contacts'
 import { chatImageColours } from "../ChatImageColours/imageColours"
@@ -19,6 +20,7 @@ export default AddChat = (props) => {
     const [expanded, setExpanded] = useState(true)
     const [themeState, setThemeState] = useState(Appearance.getColorScheme())
     const [searchText, setSearchText] = useState("")
+    const [permissionStatus, setPermissionStatus] = useState(false)
 
     const [contact, setContact] = useState(null)
 
@@ -31,16 +33,16 @@ export default AddChat = (props) => {
 
     const RequestContactAccess = async () => {
         try {
+            setPermissionStatus(true)
             const { status } = await Contacts.requestPermissionsAsync();
+
             if (status === 'granted') {
                 const { data } = await Contacts.getContactsAsync({
                     fields: [Contacts.Fields.Emails],
                 });
                 setContact(data)
-                // const character = data[0].name.substring(0,1)
-                // console.log(chatImageColours.colors.light[character]);
             } else {
-                RequestContactAccess()
+                setPermissionStatus(false)
             }
         }
         catch (err) {
@@ -188,37 +190,47 @@ export default AddChat = (props) => {
                     alignSelf: 'center'
                 }}>
                     {
-                        contact?.map((item, index) => {
-                            return (
-                                <View style={{
-                                    marginTop: 10,
-                                    backgroundColor: themeState === 'dark' ? '#212121' : '#f0f0f0',
-                                    width: '100%', height: 60,
-                                    borderRadius: 10,
-                                    alignSelf: 'center',
-                                    flexDirection: 'row', alignItems: 'center',
-                                    justifyContent: 'space-between', paddingHorizontal: 30
-                                }} key={index}>
-                                    <View style={{
-                                        width: 40, height: 40,
-                                        borderRadius: 20, alignItems: 'center',
-                                        justifyContent: 'center',
-                                        backgroundColor: themeState === 'dark' ?
-                                            chatImageColours.colors.dark[item.name.substring(0, 1)]
-                                            :
-                                            chatImageColours.colors.light[item.name.substring(0, 1)]
-                                    }}>
-                                        <TextBold value={item.name.substring(0, 1)}
-                                            inverted />
-                                    </View>
-                                    <View style={{flex:0.9, alignItems:'flex-start',
-                                        justifyContent:'flex-start', flexDirection:'row'
-                                    }}>
-                                        <TextBold value={item.name} fontSize={18} />
-                                    </View>
-                                </View>
-                            )
-                        })
+                        permissionStatus ?
+                            <View style={{ width: '100%' }}>
+                                {
+                                    contact?.map((item, index) => {
+                                        return (
+                                            <View style={{
+                                                marginTop: 10,
+                                                backgroundColor: themeState === 'dark' ? '#212121' : '#f0f0f0',
+                                                width: '100%', height: 60,
+                                                borderRadius: 10,
+                                                alignSelf: 'center',
+                                                flexDirection: 'row', alignItems: 'center',
+                                                justifyContent: 'space-between', paddingHorizontal: 30
+                                            }} key={index}>
+                                                <View style={{
+                                                    width: 40, height: 40,
+                                                    borderRadius: 20, alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    backgroundColor: themeState === 'dark' ?
+                                                        chatImageColours.colors.dark[item.name.substring(0, 1)]
+                                                        :
+                                                        chatImageColours.colors.light[item.name.substring(0, 1)]
+                                                }}>
+                                                    <TextBold value={item.name.substring(0, 1)}
+                                                        inverted />
+                                                </View>
+                                                <View style={{
+                                                    flex: 0.9, alignItems: 'flex-start',
+                                                    justifyContent: 'flex-start', flexDirection: 'row'
+                                                }}>
+                                                    <TextBold value={item.name} fontSize={18} />
+                                                </View>
+                                            </View>
+                                        )
+                                    })
+                                }
+                            </View>
+                            :
+                            <View style={{ width: '100%' }}>
+                                
+                            </View>
                     }
                 </View>
             </View>
