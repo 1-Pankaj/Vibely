@@ -68,7 +68,7 @@ export default AddChat = (props) => {
             useNativeDriver: false
         }).start()
     }
-
+    
     const [focused, setFocused] = useState(true)
 
     useEffect(() => {
@@ -235,7 +235,7 @@ export default AddChat = (props) => {
                             <View style={{ width: '100%' }}>
                                 <LottieView source={require('../../../../../Assets/Animations/nocontacts.json')}
                                     autoPlay style={{
-                                        width: '100%', height: Dimensions.get('window').height / 2.5,
+                                        width: '60%', height: Dimensions.get('window').height / 2.5,
                                         alignSelf: 'center'
                                     }}
                                     loop />
@@ -245,7 +245,7 @@ export default AddChat = (props) => {
                                     <Custombutton text={"Please allow access"} 
                                     onPress={()=>{
                                         Linking.openSettings()
-                                    }}/>
+                                    }} small/>
                                 </View>
                             </View>
                     }

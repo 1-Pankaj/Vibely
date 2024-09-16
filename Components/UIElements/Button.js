@@ -13,18 +13,19 @@ const Custombutton = ({ text,
     marginBottom,
     marginHorizontal,
     marginVertical,
-    codeloom
+    codeloom,
+    small
 }) => {
     return (
         <TouchableScale onPress={onPress} style={{
-            borderRadius: 10, marginStart: marginStart,
+            borderRadius: small ? 35 : 10, marginStart: marginStart,
             marginEnd: marginEnd, marginBottom: marginBottom,
             marginTop: marginTop, marginHorizontal: marginHorizontal,
-            marginVertical: marginVertical, backgroundColor: codeloom? DarkColours.codeloom : DarkColours.primary,
-            paddingVertical: 20, width: Dimensions.get('window').width - 65,
+            marginVertical: marginVertical, backgroundColor: codeloom ? DarkColours.codeloom : DarkColours.primary,
+            paddingVertical: 20, width: small ? Dimensions.get('window').width - 200 : Dimensions.get('window').width - 65,
         }}
             disabled={disabled}>
-            <TextRegular value={text} bold inverted />
+            <TextRegular value={text} bold inverted fontSize={small ? 16 : 18} />
         </TouchableScale>
     )
 }
