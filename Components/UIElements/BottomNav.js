@@ -7,11 +7,11 @@ export const BottomNav = ({ onTabChange, visible }) => {
     const [themeState, setThemeState] = useState(Appearance.getColorScheme());
     const [selectedTab, setSelectedTab] = useState('chat');
 
-    const animatedPosition = useState(new Animated.Value(0))[0]
+    const animatedPosition = useState(new Animated.Value(30))[0]
 
     const animatePosition = () => {
         Animated.timing(animatedPosition, {
-            toValue: visible ? 0 : -115,
+            toValue: visible ? 30 : -115,
             duration: 300,
             useNativeDriver: false,
             easing: Easing.ease
@@ -41,25 +41,24 @@ export const BottomNav = ({ onTabChange, visible }) => {
             position: 'absolute',
             bottom: animatedPosition,
             alignItems: 'center',
-            width: '100%'
+            width: '90%', elevation:10
         }}>
             <Card
                 style={{
-                    width: Dimensions.get('window').width,
+                    width: '100%',
                     height: 80,
-                    borderRadius: 0, elevation: 0,
-                    borderTopWidth: 0.2,
-                    borderTopColor: themeState === 'dark' ? '#414141' : 'lightgray',
+                    borderRadius: 40, 
                     flexDirection: 'row',
                     alignItems: 'center', justifyContent: 'space-evenly',
-                    backgroundColor: themeState === 'dark' ? 'black' : 'white'
+                    backgroundColor: themeState === 'dark' ? 'black' : 'white',
+                    borderWidth:0.5, borderColor: themeState === 'dark'? 'white' :
+                    'darkgray'
                 }}
-                elevation={0}
                 contentStyle={{
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-around',
-                    width: '100%'
+                    width: '80%'
                 }}
             >
                 <TouchableOpacity

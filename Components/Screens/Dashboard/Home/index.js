@@ -30,11 +30,11 @@ const Home = (props) => {
         })
     }, [])
 
-    const animatedPosition = useState(new BaseAnimated.Value(115))[0]
+    const animatedPosition = useState(new BaseAnimated.Value(170))[0]
 
     const animateFab = () => {
         BaseAnimated.timing(animatedPosition, {
-            toValue: !visibleNavbar ? 70 : 150,
+            toValue: !visibleNavbar ? 70 : 170,
             useNativeDriver: false,
             duration: 300,
             easing: Easing.ease,
@@ -131,7 +131,7 @@ const Home = (props) => {
                                 fontSize={30} flexStart marginStart={20} />
                     }
                     <ExpandableSection expanded={
-                        currentTab === 'home' ? false : visibleSearch
+                        currentTab === 'home' ? false : true
                     } >
                         <View style={{
                             flexDirection: 'row',
